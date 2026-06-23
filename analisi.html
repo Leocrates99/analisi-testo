@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analisi del Testo · Officina critica</title>
+<meta name="description" content="Strumento di Digital Humanities per l'analisi stratificata del testo letterario: stile e retorica, lessico e semantica, pragmatica, ipertestualità.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design.css">
+</head>
+<body>
+
+<!-- ── TOP BAR ─────────────────────────────────────────────── -->
+<header class="topbar">
+  <a class="brand" href="index.html">Analisi del Testo<small>Officina critica</small></a>
+  <div class="crumb" id="crumbWrap" style="display:none"><span id="crumb"></span></div>
+  <div class="actions">
+    <span class="save-dot" id="saveDot">Salvato</span>
+    <button class="btn ghost sm" id="btnArchivio" title="Torna all'archivio">Archivio</button>
+    <button class="btn ghost sm" id="btnExport" title="Esporta tutto l'archivio">Esporta</button>
+    <button class="btn ghost sm" id="btnImport" title="Importa da file JSON">Importa</button>
+  </div>
+</header>
+
+<!-- ── VISTA ARCHIVIO ──────────────────────────────────────── -->
+<section id="view-archive">
+  <div class="archive">
+    <div class="archive-head">
+      <h1>L'officina del testo</h1>
+      <p>Raccogli, evidenzia e classifica le tue letture. Ogni passo diventa un dossier critico a più livelli, sempre con te.</p>
+    </div>
+    <div class="archive-bar">
+      <button class="btn primary" id="btnNuovoPasso">＋ Nuovo passo</button>
+      <button class="btn" id="btnImportArch">↥ Importa archivio</button>
+    </div>
+    <div class="passi-grid" id="passiGrid"></div>
+  </div>
+</section>
+
+<!-- ── VISTA WORKSPACE ─────────────────────────────────────── -->
+<section id="view-workspace" style="display:none">
+  <div class="workspace">
+
+    <!-- Pannello testo -->
+    <div class="panel panel-text">
+      <div class="work-meta">
+        <div class="wm-author" id="wmAuthor"></div>
+        <div class="wm-title" id="wmTitle"></div>
+        <div class="wm-sub" id="wmSub"></div>
+        <button class="btn ghost sm" id="btnEditPasso" style="margin-top:8px">✎ Dati del passo</button>
+      </div>
+      <div class="mode-toggle" id="modeToggle">
+        <button data-mode="con">Con testo</button>
+        <button data-mode="senza">Libro a fianco</button>
+      </div>
+      <div id="textHost"></div>
+    </div>
+
+    <!-- Pannello note -->
+    <div class="panel panel-notes">
+      <div class="notes-head">
+        <div class="nh-row">
+          <h2>Annotazioni</h2>
+          <button class="btn primary sm" id="btnAddNote">＋ Annota</button>
+        </div>
+        <div class="view-toggle" id="viewToggle">
+          <button data-view="livello" class="active">Per livello</button>
+          <button data-view="importanza">Per importanza</button>
+          <button data-view="sequenza">In sequenza</button>
+        </div>
+        <div class="filters" id="filterLivelli"></div>
+        <div class="filters" id="filterImp"></div>
+        <input type="text" class="notes-search" id="notesSearch" placeholder="Cerca tra commenti, voci, citazioni, tag…">
+        <div class="nh-row" style="margin-top:10px">
+          <span class="nh-count" id="notesCount">0 note</span>
+          <button class="btn ghost sm" id="btnExportPasso" title="Esporta solo questo passo">Esporta passo</button>
+        </div>
+      </div>
+      <div class="notes-list" id="notesList"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── MODALE ──────────────────────────────────────────────── -->
+<div class="overlay" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Nuova annotazione</h3>
+      <button class="btn ghost sm" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot">
+      <button class="btn danger" id="btnDelete" style="display:none">Elimina</button>
+      <div style="display:flex;gap:10px;margin-left:auto">
+        <button class="btn" id="btnCancel">Annulla</button>
+        <button class="btn primary" id="btnSave">Salva</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileImport" accept="application/json,.json" style="display:none">
+<div class="toast" id="toast"></div>
+
+<script src="data/taxonomy.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

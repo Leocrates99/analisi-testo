@@ -1,0 +1,55 @@
+name: Deploy Analisi del Testo to GitHub Pages
+
+# Pubblica automaticamente il sito statico (index.html, analisi.html +
+# le cartelle assets/ e data/) su GitHub Pages a ogni push sul branch
+# principale. Ti basta fare `git push` e il sito online si aggiorna da solo.
+#
+# ⚙️  Requisito UNA-TANTUM (da fare una sola volta nella pagina del repo):
+#     Settings ▸ Pages ▸ "Build and deployment" ▸ Source = "GitHub Actions".
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout del repository
+        uses: actions/checkout@v4
+
+      - name: Prepara la cartella del sito (_site)
+        run: |
+          mkdir -p _site
+          rsync -a \
+            --exclude='_site/' \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            ./ _site/
+          touch _site/.nojekyll
+          echo "Contenuto pubblicato:" && ls -A _site
+
+      - name: Configura GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Carica l'artifact del sito
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Pubblica su GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
