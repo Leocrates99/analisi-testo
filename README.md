@@ -79,11 +79,14 @@ Tutto è salvato in `localStorage` del browser: nessun server, nessun account.
 analisi-testo/
 ├─ index.html            ← hub (Analisi · Commento · Interpretazione guidata)
 ├─ analisi.html          ← lo strumento di analisi (Fase 1)
+├─ commento.html         ← l'officina del commento (Fase 2)
 ├─ assets/
 │   ├─ design.css        ← design system (token Poetrify + componenti)
-│   └─ app.js            ← logica: stato, evidenziatura, form, filtri, import/export
+│   ├─ app.js            ← logica Analisi: stato, evidenziatura, form, filtri, import/export
+│   └─ commento.js       ← logica Commento: fasi, materiali, autosalvataggio, export
 ├─ data/
-│   └─ taxonomy.js       ← i 4 livelli, le categorie e il repertorio di voci
+│   ├─ taxonomy.js       ← i 4 livelli, le categorie e il repertorio di voci
+│   └─ commento.js       ← il protocollo di commento (moderno + filologico) e il vademecum
 └─ .github/workflows/
     └─ deploy.yml        ← pubblicazione automatica su GitHub Pages
 ```
@@ -91,10 +94,27 @@ analisi-testo/
 Sito statico puro (nessuna dipendenza, nessun build). Funziona anche aperto da
 `file://`; i font sono Google Fonts con fallback serif di sistema.
 
+## Commento (Fase 2)
+
+L'officina del commento ([`commento.html`](commento.html)) trasforma il metodo di
+analisi letteraria in una **composizione guidata per fasi**, alimentata dalle
+annotazioni raccolte:
+
+1. Inquadramento e contesto · 2. Parafrasi · 3. Livello formale e stilistico ·
+   4. Livello retorico e semantico · 5. Interpretazione critica.
+
+Per i testi **greci e latini** il protocollo diventa **commento filologico-letterario**
+(critica del testo · morfosintassi e lessico · metrica e prosodia · intertestualità ·
+contesto antropologico), con le **tre domande chiave** filologia → letteratura → storia.
+Il protocollo giusto si attiva da solo in base alla lingua del passo.
+
+Ogni fase mostra l'obiettivo, l'**errore da evitare**, e i **materiali raccolti**
+(le annotazioni pertinenti a quel livello), inseribili nel commento con un clic.
+Una barra di avanzamento misura i campi compilati; il commento si esporta in Markdown.
+In testa, il **vademecum** e il principio *«la forma è contenuto»*.
+
 ## Fasi successive (previste)
 
-- **Fase 2 — Commento**: compilazione e strutturazione di un commento continuo a
-  partire dalle annotazioni raccolte (parafrasi, analisi, sintesi).
 - **Fase 3 — Interpretazione guidata**: percorso di domande dall'osservazione
   all'ipotesi interpretativa argomentata.
 
