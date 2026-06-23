@@ -15,7 +15,7 @@
   .brand-mark { display: block; font-family: var(--font-display); font-size: clamp(40px, 8vw, 62px); font-weight: 700; letter-spacing: -0.015em; color: var(--brand); line-height: 1; }
   .brand-sub { display: block; margin-top: 14px; font-family: var(--font-ui); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.22em; color: var(--sepia); }
   .intro { max-width: 34rem; text-align: center; margin: 26px auto 48px; font-size: 17px; line-height: 1.65; color: var(--ink); }
-  .hub { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; width: 100%; max-width: 920px; }
+  .hub { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; width: 100%; max-width: 940px; }
   .hub-card { display: flex; flex-direction: column; gap: 10px; padding: 28px 26px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: var(--radius-lg); text-decoration: none; color: inherit; transition: all 0.18s var(--ease); }
   .hub-card:not(.soon):hover { border-color: var(--brand); box-shadow: var(--shadow-lift); transform: translateY(-3px); }
   .hub-card:hover { text-decoration: none; }
@@ -56,6 +56,13 @@
     <span class="hub-card-title">Interpretazione guidata</span>
     <span class="hub-card-desc">Un foglio di lavoro a 5 sezioni che accompagna dall'osservazione alla tesi critica, importando i dati dalle annotazioni.</span>
     <span class="hub-card-cta" style="color:var(--ipertesto)">Interpreta →</span>
+  </a>
+
+  <a class="hub-card" href="ricezione.html">
+    <svg class="hub-card-icon" style="color:#c0492f" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/></svg>
+    <span class="hub-card-title">Ricezione</span>
+    <span class="hub-card-desc">La ruota delle emozioni: ogni lettore accende ciò che il brano gli suscita, e dalla somma — con la sua dispersione — emerge il profilo affettivo dell'opera.</span>
+    <span class="hub-card-cta" style="color:#c0492f">Ausculta →</span>
   </a>
 </main>
 

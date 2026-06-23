@@ -951,6 +951,15 @@
         if (bl.length) intHtml += `<h3>${sez.icona || ''} ${esc(sez.nome)}</h3>` + bl.join('');
       });
     }
+    // Ricezione (spettro emotivo)
+    let ricHtml = '';
+    const RIC = window.AT_RICEZIONE;
+    if (RIC && p.ricezione && p.ricezione.letture && p.ricezione.letture.length) {
+      const rip = RIC.riepilogo(p.ricezione.letture);
+      ricHtml += `<p class="d-field">Profilo affettivo da <b>${rip.n}</b> letture · densità <b>${rip.density.toFixed(2)}/4</b> · famiglia dominante <b>${esc(rip.famDom)}</b> · tono <b>${esc(rip.toneLbl)}</b> · ${esc(rip.concordanzaLbl)} (scarto medio ${rip.avgSd.toFixed(2)}).</p>`;
+      ricHtml += '<p class="d-field"><b>Emozioni predominanti:</b></p><ul>'
+        + rip.dominant.map((o) => `<li>${esc(RIC.EMO[o.i].n)} — ${o.v.toFixed(o.v % 1 ? 1 : 0)}/4 <span style="color:#888">(±${rip.sd[o.i].toFixed(1)})</span></li>`).join('') + '</ul>';
+    }
     const css = ':root{--retorica:#1800AC;--semantica:#2f855a;--pragmatica:#2b6cb0;--ipertesto:#9c6b3c;--ink:#2c3539;--sepia:#6b6660;--rule:#d5d2cb;}'
       + '*{box-sizing:border-box}body{font-family:Georgia,"Times New Roman",serif;color:var(--ink);line-height:1.6;margin:0;background:#f5f4f0}'
       + 'article{max-width:760px;margin:0 auto;background:#fff;padding:48px 56px}'
@@ -977,6 +986,7 @@
       + (annHtml ? '<section><h2>Annotazioni</h2>' + annHtml + '</section>' : '')
       + (comHtml ? '<section><h2>Commento</h2>' + comHtml + '</section>' : '')
       + (intHtml ? '<section><h2>Interpretazione</h2>' + intHtml + '</section>' : '')
+      + (ricHtml ? '<section><h2>Ricezione</h2>' + ricHtml + '</section>' : '')
       + '</article></body></html>';
   }
   function exportDossier() {

@@ -519,6 +519,69 @@ textarea.text-input:focus { outline: none; border-color: var(--brand); }
   .mat-list { grid-template-columns: 1fr; }
 }
 
+/* ============================================================
+   RICEZIONE (Fase 4) — spettro emotivo
+   ============================================================ */
+.ric-stage { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 760px) { .ric-stage { grid-template-columns: 1fr; } }
+.ric-panel { background: var(--paper); border: 1px solid var(--rule-soft); border-radius: var(--radius-lg); padding: 16px 16px 12px; box-shadow: var(--shadow-card); }
+.ric-panel h3 { font-family: var(--font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia); margin-bottom: 4px; }
+.ric-panel svg { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.ric-seg { cursor: pointer; transition: opacity 0.18s var(--ease); }
+.ric-seg:hover { opacity: 0.9; }
+.ric-hit { cursor: pointer; }
+.ric-hit:focus { outline: none; }
+.ric-hit:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.ric-caption { min-height: 18px; color: var(--sepia); font-size: 12.5px; text-align: center; margin: 2px 0 6px; font-family: var(--font-body); font-style: italic; line-height: 1.4; }
+.ric-caption b { color: var(--ink); font-style: normal; }
+.ric-legend { display: flex; flex-wrap: wrap; gap: 5px 16px; margin-top: 8px; justify-content: center; }
+.ric-legend span { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-size: 11px; color: var(--sepia); }
+.ric-legend i { width: 10px; height: 10px; border-radius: 2px; }
+
+.ric-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 22px; justify-content: center; }
+.ric-count { font-family: var(--font-ui); font-size: 13px; color: var(--sepia); }
+.ric-count b { color: var(--ink); }
+.ric-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; justify-content: center; }
+.ric-chip { display: inline-flex; align-items: center; gap: 7px; background: var(--cream); border: 1px solid var(--rule); border-radius: 999px; padding: 5px 6px 5px 12px; font-family: var(--font-ui); font-size: 12.5px; color: var(--ink); }
+.ric-chip button { padding: 0; width: 20px; height: 20px; line-height: 1; border-radius: 50%; border: none; background: var(--rule); color: var(--ink); cursor: pointer; }
+.ric-chip button:hover { background: var(--sepia); color: var(--paper); }
+.howto { color: var(--sepia); font-family: var(--font-ui); font-size: 12.5px; line-height: 1.6; margin: 16px auto 0; max-width: 640px; text-align: center; }
+.howto b { color: var(--ink); }
+
+.ric-readout { margin-top: 26px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: var(--radius-lg); padding: 20px 22px; box-shadow: var(--shadow-card); }
+.ric-readout h3 { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--brand); margin-bottom: 4px; }
+.ric-readout .src { color: var(--sepia); font-family: var(--font-ui); font-size: 12.5px; margin-bottom: 16px; }
+.ric-dom { display: flex; flex-direction: column; gap: 11px; }
+.ric-row { display: grid; grid-template-columns: 140px 1fr 46px; gap: 12px; align-items: center; }
+.ric-nm { font-family: var(--font-body); font-size: 16px; color: var(--ink); }
+.ric-nm small { display: block; font-family: var(--font-ui); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sepia); }
+.ric-bar { height: 12px; border-radius: 7px; background: var(--cream); overflow: hidden; border: 1px solid var(--rule-soft); }
+.ric-bar i { display: block; height: 100%; border-radius: 7px; transition: width 0.3s var(--ease); }
+.ric-val { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--ink); text-align: right; }
+.ric-summary { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--rule-soft); }
+.ric-summary div { font-family: var(--font-ui); font-size: 12px; color: var(--sepia); }
+.ric-summary b { display: block; font-family: var(--font-display); color: var(--ink); font-size: 18px; margin-top: 3px; }
+.ric-sd { display: block; font-size: 10.5px; color: var(--sepia); margin-top: 2px; }
+@media (max-width: 620px) { .ric-row { grid-template-columns: 110px 1fr 40px; } }
+
+/* Profilo di ricezione dentro l'Interpretazione */
+.ric-profilo { background: #faf0ec; border: 1px solid #c0492f; border-radius: var(--radius-md); padding: 12px 14px; margin: 4px 0 14px; }
+.ric-profilo .glc-label { color: #c0492f; }
+.ric-profilo p { font-size: 13.5px; line-height: 1.55; color: var(--ink); margin: 3px 0; }
+.ric-profilo-hint { font-style: italic; color: var(--sepia) !important; font-size: 12.5px !important; }
+.ric-profilo-empty { font-family: var(--font-ui); font-size: 13px; color: var(--sepia); background: var(--cream); border-color: var(--rule-soft); }
+
+/* ── Modalità aula (tema scuro da proiezione) ─────────────── */
+body.aula {
+  --bg: #14121C; --paper: #211D2E; --cream: #1C1928; --ink: #ECE5D5; --sepia: #9A92A8;
+  --rule: #352F45; --rule-soft: #2f2a40; --brand: #F4C84A; --brand-dark: #e9bd33; --brand-soft: #2a2538;
+  background: radial-gradient(1200px 700px at 50% -10%, #211C30 0%, #14121C 60%);
+}
+body.aula .topbar { background: rgba(20, 18, 28, 0.92); }
+body.aula .btn.primary { color: #241c00; }
+body.aula .ric-readout h3, body.aula .archive-head h1, body.aula .wm-title { color: var(--brand); }
+body.aula .toast { background: #352F45; color: #ECE5D5; }
+
 /* ── Toast ──────────────────────────────────────────────── */
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: #fff; font-family: var(--font-ui); font-size: 13px; padding: 11px 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-pop); opacity: 0; pointer-events: none; transition: all 0.25s var(--ease); z-index: 200; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }

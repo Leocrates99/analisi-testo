@@ -88,18 +88,34 @@ analisi-testo/
 ├─ analisi.html          ← lo strumento di analisi (Fase 1)
 ├─ commento.html         ← l'officina del commento (Fase 2)
 ├─ interpretazione.html  ← il foglio di lavoro dell'interpretazione guidata (Fase 3)
+├─ ricezione.html        ← lo spettro emotivo / laboratorio di ricezione (Fase 4)
 ├─ assets/
-│   ├─ design.css        ← design system (token Poetrify + componenti)
-│   ├─ app.js            ← logica Analisi: stato, evidenziatura, form, filtri, import/export
+│   ├─ design.css        ← design system (token Poetrify + componenti + tema «aula»)
+│   ├─ app.js            ← logica Analisi: stato, evidenziatura, form, filtri, dossier, import/export
 │   ├─ commento.js       ← logica Commento: fasi, materiali, autosalvataggio, export
-│   └─ interpretazione.js← logica Interpretazione: campi tipizzati, liste, import, export
+│   ├─ interpretazione.js← logica Interpretazione: campi tipizzati, liste, import, export
+│   └─ ricezione.js      ← logica Ricezione: ruota, radar con dispersione, lettori, temi
 ├─ data/
 │   ├─ taxonomy.js       ← i 4 livelli, le categorie e il repertorio di voci
 │   ├─ commento.js       ← il protocollo di commento (moderno + filologico) e il vademecum
-│   └─ interpretazione.js← la scheda analitica a 5 sezioni e i campi tipizzati
+│   ├─ interpretazione.js← la scheda analitica a 5 sezioni e i campi tipizzati
+│   └─ ricezione.js      ← la tassonomia delle emozioni e il calcolo del riepilogo
 └─ .github/workflows/
     └─ deploy.yml        ← pubblicazione automatica su GitHub Pages
 ```
+
+## Ricezione (Fase 4)
+
+Il complemento *affettivo* all'analisi *formale*: [`ricezione.html`](ricezione.html)
+ausculta il testo attraverso chi lo legge. Su una **ruota di 14 emozioni** (in 4
+famiglie, con valenza) ogni lettore accende — in silenzio, prima della discussione —
+ciò che il brano gli suscita (intensità 0–4); il **tracciato a ragno** mostra la media
+dei lettori e, soprattutto, la **dispersione** (la classe converge o si divide?). La
+ruota è accessibile da tastiera (`role="slider"`, frecce e tasti 0–4). I lettori
+vivono in `passo.ricezione` nello stesso archivio. Un **toggle «modalità aula»** passa
+al tema scuro da proiezione. Il profilo di ricezione confluisce nel **Dossier** e in un
+riquadro dell'**Interpretazione** (sezione ermeneutica), per confrontare la tesi con
+l'effetto reale sui lettori.
 
 Sito statico puro (nessuna dipendenza, nessun build). Funziona anche aperto da
 `file://`; i font sono Google Fonts con fallback serif di sistema.

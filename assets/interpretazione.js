@@ -127,10 +127,12 @@
       const campi = sez.campi.map((c) => renderField(sez, c, d[sez.id + '.' + c.id])).join('');
       const mat = annPerFonti(p, sez.fonti);
       const materiali = mat.length ? `<details class="materiali"><summary>Materiali raccolti — ${mat.length}</summary><div class="mat-list">${mat.map((a) => matCardHTML(a)).join('')}</div></details>` : '';
+      const ricPanel = (sez.id === 'ermeneutica') ? ricezioneProfilo(p) : '';
       return `<section class="fase isez" data-sez="${sez.id}">
         <div class="fase-head"><span class="fase-n">${sez.icona || sez.n}</span>
           <div><h2>${esc(sez.nome)}${sez.sotto ? ` <span class="sez-tag">${esc(sez.sotto)}</span>` : ''}</h2>${sez.intro ? `<p class="fase-ob">${esc(sez.intro)}</p>` : ''}</div></div>
         ${campi}
+        ${ricPanel}
         ${materiali}
       </section>`;
     }).join('');
@@ -217,6 +219,20 @@
       ${ref ? `<div class="mat-ref">${esc(ref)}</div>` : ''}
       ${a.commento ? `<div class="mat-com">${esc(a.commento)}</div>` : ''}
     </div>`;
+  }
+
+  // Profilo di ricezione (sola lettura) per la sezione ermeneutica
+  function ricezioneProfilo(p) {
+    const RIC = window.AT_RICEZIONE;
+    if (!RIC || !p.ricezione || !p.ricezione.letture || !p.ricezione.letture.length) {
+      return `<div class="ric-profilo ric-profilo-empty">Nessuna ricezione raccolta per questo passo. <a href="ricezione.html?passo=${p.id}">Apri il laboratorio di ricezione →</a></div>`;
+    }
+    const rip = RIC.riepilogo(p.ricezione.letture);
+    const dom = rip.dominant.map((o) => esc(RIC.EMO[o.i].n) + ' ' + o.v.toFixed(o.v % 1 ? 1 : 0) + '/4').join(' · ') || '—';
+    return `<div class="ric-profilo"><span class="glc-label">Profilo di ricezione · ${rip.n} letture</span>`
+      + `<p>Emozioni predominanti: <b>${dom}</b>.</p>`
+      + `<p>Densità ${rip.density.toFixed(2)}/4 · famiglia <b>${esc(rip.famDom)}</b> · tono <b>${esc(rip.toneLbl)}</b> · ${esc(rip.concordanzaLbl)}.</p>`
+      + `<p class="ric-profilo-hint">Confronta la tua tesi con l'effetto reale sui lettori. <a href="ricezione.html?passo=${p.id}">apri la ricezione →</a></p></div>`;
   }
 
   /* ── Binding (delega su sezioniHost) ──────────────────────── */
