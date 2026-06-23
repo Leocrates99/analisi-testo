@@ -47,7 +47,7 @@
       breve: 'Stile e figure',
       colore: 'retorica',
       descr: 'Come è costruito il testo: figure retoriche, stile, sintassi, ritmo e metrica.',
-      intento: 'Qui guardi COME è fatto il testo — i suoni, l\'ordine delle parole, le figure — prima ancora del significato. È il livello della forma.',
+      intento: 'Prima del significato viene la fattura: i suoni, l\'ordine delle parole, le figure. Comincia da qui, perché nella grande pagina la forma è già il contenuto che prende corpo.',
       domanda: 'Come suona e com\'è costruito? Quali parole sono messe in rilievo?',
       esempio: 'Es.: la ripetizione del suono «r» rende aspro il verso.',
       categorie: [
@@ -218,7 +218,7 @@
       breve: 'Lessico e sensi',
       colore: 'semantica',
       descr: 'Le scelte di parola e i loro significati: temi, campi semantici, connotazioni.',
-      intento: 'Qui studi LE PAROLE e i loro significati: quali immagini evocano, quali temi tornano, quali sfumature nascondono.',
+      intento: 'Pesa le parole una a una: ciascuna porta con sé un\'immagine, un campo, una memoria. Segui i fili che le legano e vedrai affiorare i temi.',
       domanda: 'Quali sono le parole-chiave? A quali idee e sfere di significato rimandano?',
       esempio: 'Es.: il lessico della luce attraversa tutta la poesia.',
       categorie: [
@@ -283,7 +283,7 @@
       breve: 'Comunicazione',
       colore: 'pragmatica',
       descr: 'Il testo come atto comunicativo: chi parla, a chi, con quale funzione e intenzione.',
-      intento: 'Qui leggi il testo come un atto di comunicazione: chi parla, a chi si rivolge, con quale tono e con quale scopo.',
+      intento: 'Un testo non si limita a descrivere; parla a qualcuno, e per una ragione. Chiediti chi tiene la voce e a chi la porge, perché lì si annida metà del senso.',
       domanda: 'Chi parla e a chi? Con che tono, e per ottenere che cosa?',
       esempio: 'Es.: il poeta si rivolge alla patria con tono accorato (apostrofe).',
       categorie: [
@@ -347,7 +347,7 @@
       breve: 'Rimandi e confronti',
       colore: 'ipertesto',
       descr: 'Come il passo dialoga con altri testi: citazione, derivazione, genere, cornice, commento.',
-      intento: 'Qui metti il testo in dialogo con ALTRI testi: la stessa opera, lo stesso autore, altri autori, la tradizione.',
+      intento: 'Nessuna pagina nasce dal nulla; ognuna ne porta dentro altre. Cerca le voci che vi risuonano — la stessa opera, lo stesso autore, i modelli antichi — e osserva come il poeta le piega al suo disegno.',
       domanda: 'Questo passo ti ricorda altri testi? Da dove viene, chi cita, chi lo riprenderà?',
       esempio: 'Es.: riprende un\'immagine di Saffo, rovesciandone il senso.',
       categorie: [
@@ -481,18 +481,52 @@
   }
   function getImportanza(id) { return IMPORTANZE.find(function (i) { return i.id === id; }); }
 
+  /* ── Guida per categoria (voce dell'insegnante) ───────────────
+     Una riga personale per ogni categoria: che cosa cercare e
+     perché conta. Chiave: 'livello.categoria'. ── */
+  const GUIDE_CATEGORIE = {
+    // Stilistico-retorica
+    'retorica.suono': 'Leggi ad alta voce: l’orecchio coglie prima dell’occhio. Quando un suono torna o stride, chiediti se asseconda il sentimento del verso o lo contrasta.',
+    'retorica.sintassi': 'Guarda dove l’autore rompe l’ordine naturale della frase: ciò che sposta in fondo, o isola, è quasi sempre ciò a cui tiene di più.',
+    'retorica.significato': 'Qui una parola ne dice un’altra. Tieni distinta l’immagine che leggi dal concetto che intende: è in quello scarto che la figura lavora.',
+    'retorica.pensiero': 'Segui la mossa del ragionamento — una domanda che non attende risposta, un’ironia, una reticenza. Non sono ornamenti, ma il modo in cui il testo ti tira dentro.',
+    'retorica.amplificazione': 'Quando il testo accumula e dilata, non è prolissità, ma la piena del sentimento che cerca argine. Annota dove la voce si gonfia, e perché.',
+    'retorica.metaplasmi': 'Una sillaba in più o in meno di rado è un caso: serve al verso o al gusto del suono. Segnala la forma alterata e l’effetto che ne nasce.',
+    'retorica.stile': 'Misura il respiro generale: frasi brevi e secche, o lunghe e annodate? Registro alto o quotidiano? Il modo di costruire la frase è già un ritratto dell’autore.',
+    'retorica.metrica': 'Il metro non è una gabbia vuota: dà ritmo al pensiero. Nota dove cade la pausa e dove il verso si inarca — lì la forma preme sul significato.',
+    // Semantico-lessicale
+    'semantica.campo': 'Raggruppa le parole per area di senso — natura, guerra, luce, morte. Quando una sfera domina, hai trovato una delle correnti profonde del testo.',
+    'semantica.tema': 'Cerca ciò che torna: un’immagine, un’idea, un contrasto. Il tema non si dichiara quasi mai, si ricava dalle insistenze.',
+    'semantica.scelta': 'Chiediti perché proprio quella parola e non un sinonimo: un arcaismo, un tecnicismo, un termine raro pesano e datano. La scelta del lessico è una firma.',
+    'semantica.senso': 'Una parola può dire due cose insieme, o suggerirne una terza per via affettiva. Annota i doppi sensi e le connotazioni: spesso il non detto conta più del detto.',
+    // Pragmatico-espressiva
+    'pragmatica.funzioni': 'Domàndati a che cosa serve l’enunciato: sfoga un’emozione, comanda, informa, gioca con la lingua stessa. La funzione che prevale orienta la lettura.',
+    'pragmatica.enunciazione': 'Rintraccia le impronte di chi parla: gli «io» e i «tu», i «qui» e gli «ora». Sono i ganci che fissano la voce a una persona e a un momento.',
+    'pragmatica.tono': 'Ascolta l’atteggiamento dietro le parole — solenne, ironico, dolente, esortativo. Il tono è la temperatura del testo, e tocca a te misurarla.',
+    'pragmatica.implicito': 'Pesa anche ciò che il testo tace o dà per scontato. Un presupposto, un sottinteso, una frase lasciata a metà dicono molto a chi sa ascoltare i silenzi.',
+    // Ipertestuale
+    'ipertesto.intertesto': 'Tendi l’orecchio a citazioni e allusioni: una parola altrui dentro il testo apre una porta su un’altra opera. Riconoscerla raddoppia il senso.',
+    'ipertesto.ipertestoderiv': 'Se un’intera opera nasce sul calco di un’altra, chiediti come la tratta: la continua con rispetto, la trasforma, o le fa il verso per rovesciarla?',
+    'ipertesto.architesto': 'Confronta il testo col suo genere: ne segue le regole o le forza? Spesso il punto vivo è proprio dove l’autore esce dai binari attesi.',
+    'ipertesto.paratesto': 'Non trascurare la cornice: un titolo, un’epigrafe, una dedica orientano la lettura prima del primo verso. Anche la soglia parla.',
+    'ipertesto.metatesto': 'Qui il testo si volta a parlare d’altri testi: li spiega, li giudica, li contesta. Segna con quale atteggiamento entra nel dialogo.',
+  };
+  function getGuidaCategoria(livelloId, catId) { return GUIDE_CATEGORIE[livelloId + '.' + catId] || ''; }
+
   global.AT_TASSONOMIA = {
     LIVELLI: LIVELLI,
     IMPORTANZE: IMPORTANZE,
     GENERI: GENERI,
     LINGUE: LINGUE,
     IPERTESTO: IPERTESTO,
+    GUIDE_CATEGORIE: GUIDE_CATEGORIE,
     getLivello: getLivello,
     getCategoria: getCategoria,
     getImportanza: getImportanza,
     getPratica: getPratica,
+    getGuidaCategoria: getGuidaCategoria,
     letturaRapporto: letturaRapporto,
-    versione: '1.1',
+    versione: '1.2',
   };
 
 })(typeof window !== 'undefined' ? window : this);

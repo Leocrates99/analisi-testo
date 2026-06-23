@@ -27,6 +27,13 @@ Ogni livello ha un **repertorio di voci** (figure retoriche, sfere, funzioni…)
 con definizione in tooltip — tutto definito in [`data/taxonomy.js`](data/taxonomy.js)
 e pensato per essere **ampliato**.
 
+**Guida didattica.** Ogni livello dichiara la propria finalità in parole semplici —
+*forma* (retorica), *parole* (semantica), *comunicazione* (pragmatica), *dialogo*
+(ipertesto) — con una domanda-guida e un esempio; ogni categoria porta una breve nota
+d'autore (che cosa cercare e perché conta), scritta perché un buon liceale possa
+compilare in autonomia. Le finestre del form mostrano queste guide al momento della
+scelta del livello e della categoria.
+
 Ogni annotazione porta:
 - un **riferimento** (porzione di testo evidenziata *oppure* citazione manuale);
 - **livello → categoria → voce/figura**;

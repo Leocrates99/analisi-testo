@@ -448,8 +448,13 @@
     });
     if (cat) catHtml += `<option value="__altro__" ${fs.voce && !known ? 'selected' : ''}>Altro (specifica)…</option>`;
     catHtml += '</select></div></div>';
-    // spiegazione semplice della categoria scelta
-    if (cat && cat.descr) catHtml += `<p class="hint" style="margin:-8px 0 12px">${esc(cat.descr)}</p>`;
+    // guida dell'insegnante per la categoria scelta (voce personale);
+    // in mancanza, la spiegazione semplice della categoria
+    if (cat) {
+      const guidaCat = T.getGuidaCategoria(fs.livello, fs.categoria);
+      if (guidaCat) catHtml += `<p class="guida-cat" style="--c:var(--${liv ? liv.colore : 'brand'})">${esc(guidaCat)}</p>`;
+      else if (cat.descr) catHtml += `<p class="hint" style="margin:-8px 0 12px">${esc(cat.descr)}</p>`;
+    }
     // voce libera
     if (cat && fs.voce && !cat.voci.some((v) => v.nome === fs.voce)) {
       catHtml += `<div class="field"><input type="text" id="fVoceLibera" placeholder="Specifica la voce" value="${esc(fs.voce)}"></div>`;
