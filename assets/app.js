@@ -317,7 +317,7 @@
   function renderFilters() {
     const lv = $('#filterLivelli');
     lv.innerHTML = T.LIVELLI.map((l) =>
-      `<button class="chip lv-${l.colore} ${view.filtriLivello.has(l.id) ? 'active' : ''}" data-lv="${l.id}" title="${esc(l.domanda || l.descr)}">
+      `<button class="chip lv-${l.colore} ${view.filtriLivello.has(l.id) ? 'active' : ''}" data-lv="${l.id}" title="${esc(l.consegna || l.domanda || l.descr)}">
          <span class="swatch" style="background:var(--${l.colore})"></span>${esc(l.breve)}</button>`
     ).join('');
     const imp = $('#filterImp');
@@ -507,7 +507,7 @@
         + '<div class="field"><label>Che cosa vuoi osservare?</label><div class="livello-picker">'
         + T.LIVELLI.map((l) =>
           `<div class="lv-opt" data-lv="${l.id}" style="--c:var(--${l.colore});--cbg:var(--${l.colore}-bg)">
-             <span class="lo-name">${esc(l.nome)}</span><span class="lo-desc">${esc(l.domanda || l.descr)}</span></div>`).join('')
+             <span class="lo-name">${esc(l.nome)}</span><span class="lo-desc">${esc(l.consegna || l.domanda || l.descr)}</span></div>`).join('')
         + '</div></div>';
       bindModalEvents();
       return;
@@ -521,7 +521,8 @@
         </div></div>`;
 
     const guidaHtml = `<div class="guida-livello" style="border-left-color:var(--${liv.colore})">
-        <div class="gl-domanda" style="color:var(--${liv.colore})">${esc(liv.domanda || '')}</div>
+        <span class="glc-label" style="color:var(--${liv.colore})">La tua consegna</span>
+        <div class="gl-domanda" style="color:var(--${liv.colore})">${esc(liv.consegna || liv.domanda || '')}</div>
         ${liv.intento ? `<p class="gl-intento">${esc(liv.intento)}</p>` : ''}
         ${liv.esempio ? `<p class="gl-es">${esc(liv.esempio)}</p>` : ''}
         ${liv.checklist && liv.checklist.length ? `<div class="gl-check"><span class="glc-label">In questo livello cerca</span><ul>${liv.checklist.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}

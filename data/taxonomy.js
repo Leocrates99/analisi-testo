@@ -49,6 +49,7 @@
       descr: 'Come è costruito il testo: figure retoriche, stile, sintassi, ritmo e metrica.',
       intento: 'Prima del significato viene la fattura: i suoni, l\'ordine delle parole, le figure. Comincia da qui, perché nella grande pagina la forma è già il contenuto che prende corpo.',
       domanda: 'Come suona e com\'è costruito? Quali parole sono messe in rilievo?',
+      consegna: 'Individua i tratti formali — suoni, ordine delle parole, figure — e di\' che effetto produce ciascuno.',
       esempio: 'Es.: la ripetizione del suono «r» rende aspro il verso.',
       checklist: [
         'i suoni che tornano o stridono',
@@ -226,6 +227,7 @@
       descr: 'Le scelte di parola e i loro significati: temi, campi semantici, connotazioni.',
       intento: 'Pesa le parole una a una: ciascuna porta con sé un\'immagine, un campo, una memoria. Segui i fili che le legano e vedrai affiorare i temi.',
       domanda: 'Quali sono le parole-chiave? A quali idee e sfere di significato rimandano?',
+      consegna: 'Isola le parole-chiave e i campi di significato, e spiega perché l\'autore ha scelto proprio quei termini.',
       esempio: 'Es.: il lessico della luce attraversa tutta la poesia.',
       checklist: [
         'le parole-chiave che reggono il senso',
@@ -297,6 +299,7 @@
       descr: 'Il testo come atto comunicativo: chi parla, a chi, con quale funzione e intenzione.',
       intento: 'Un testo non si limita a descrivere; parla a qualcuno, e per una ragione. Chiediti chi tiene la voce e a chi la porge, perché lì si annida metà del senso.',
       domanda: 'Chi parla e a chi? Con che tono, e per ottenere che cosa?',
+      consegna: 'Stabilisci chi parla, a chi e con quale tono, e di\' che effetto cerca sul destinatario.',
       esempio: 'Es.: il poeta si rivolge alla patria con tono accorato (apostrofe).',
       checklist: [
         'chi parla e a chi si rivolge (io / tu)',
@@ -367,6 +370,7 @@
       descr: 'Come il passo dialoga con altri testi: citazione, derivazione, genere, cornice, commento.',
       intento: 'Nessuna pagina nasce dal nulla; ognuna ne porta dentro altre. Cerca le voci che vi risuonano — la stessa opera, lo stesso autore, i modelli antichi — e osserva come il poeta le piega al suo disegno.',
       domanda: 'Questo passo ti ricorda altri testi? Da dove viene, chi cita, chi lo riprenderà?',
+      consegna: 'Rintraccia i testi richiamati dal passo e spiega come l\'autore li riusa: li imita, li varia o li rovescia.',
       esempio: 'Es.: riprende un\'immagine di Saffo, rovesciandone il senso.',
       checklist: [
         'citazioni e allusioni ad altri testi',
@@ -505,35 +509,35 @@
   }
   function getImportanza(id) { return IMPORTANZE.find(function (i) { return i.id === id; }); }
 
-  /* ── Guida per categoria (voce dell'insegnante) ───────────────
-     Una riga personale per ogni categoria: che cosa cercare e
-     perché conta. Chiave: 'livello.categoria'. ── */
+  /* ── Consegna per categoria (voce dell'insegnante) ────────────
+     Per ogni categoria un compito chiaro: che cosa fare, in forma
+     di consegna d'esercizio. Chiave: 'livello.categoria'. ── */
   const GUIDE_CATEGORIE = {
     // Stilistico-retorica
-    'retorica.suono': 'Leggi ad alta voce: l’orecchio coglie prima dell’occhio. Quando un suono torna o stride, chiediti se asseconda il sentimento del verso o lo contrasta.',
-    'retorica.sintassi': 'Guarda dove l’autore rompe l’ordine naturale della frase: ciò che sposta in fondo, o isola, è quasi sempre ciò a cui tiene di più.',
-    'retorica.significato': 'Qui una parola ne dice un’altra. Tieni distinta l’immagine che leggi dal concetto che intende: è in quello scarto che la figura lavora.',
-    'retorica.pensiero': 'Segui la mossa del ragionamento — una domanda che non attende risposta, un’ironia, una reticenza. Non sono ornamenti, ma il modo in cui il testo ti tira dentro.',
-    'retorica.amplificazione': 'Quando il testo accumula e dilata, non è prolissità, ma la piena del sentimento che cerca argine. Annota dove la voce si gonfia, e perché.',
-    'retorica.metaplasmi': 'Una sillaba in più o in meno di rado è un caso: serve al verso o al gusto del suono. Segnala la forma alterata e l’effetto che ne nasce.',
-    'retorica.stile': 'Misura il respiro generale: frasi brevi e secche, o lunghe e annodate? Registro alto o quotidiano? Il modo di costruire la frase è già un ritratto dell’autore.',
-    'retorica.metrica': 'Il metro non è una gabbia vuota: dà ritmo al pensiero. Nota dove cade la pausa e dove il verso si inarca — lì la forma preme sul significato.',
+    'retorica.suono': 'Leggi il passo ad alta voce e sottolinea i suoni che si ripetono o stridono; accanto, scrivi se assecondano o contrastano il sentimento del verso.',
+    'retorica.sintassi': 'Segna i punti in cui l’ordine naturale della frase è alterato e indica quali parole, così, restano in evidenza.',
+    'retorica.significato': 'Per ogni figura scrivi da una parte l’immagine usata e dall’altra il concetto reale, poi spiega lo scarto tra le due.',
+    'retorica.pensiero': 'Individua le mosse del discorso — domande retoriche, ironia, reticenze — e di’ come ciascuna coinvolge il lettore.',
+    'retorica.amplificazione': 'Segnala i punti in cui il testo accumula o dilata e spiega quale pressione del sentimento li produce.',
+    'retorica.metaplasmi': 'Annota le parole con la forma alterata (sillabe in più o in meno) e indica se servono al verso o all’effetto sonoro.',
+    'retorica.stile': 'Descrivi in due righe il respiro generale: frasi brevi o lunghe, registro alto o quotidiano, coordinazione o subordinazione.',
+    'retorica.metrica': 'Scandisci il verso, segna pause ed enjambement e collega il ritmo allo stato d’animo della scena.',
     // Semantico-lessicale
-    'semantica.campo': 'Raggruppa le parole per area di senso — natura, guerra, luce, morte. Quando una sfera domina, hai trovato una delle correnti profonde del testo.',
-    'semantica.tema': 'Cerca ciò che torna: un’immagine, un’idea, un contrasto. Il tema non si dichiara quasi mai, si ricava dalle insistenze.',
-    'semantica.scelta': 'Chiediti perché proprio quella parola e non un sinonimo: un arcaismo, un tecnicismo, un termine raro pesano e datano. La scelta del lessico è una firma.',
-    'semantica.senso': 'Una parola può dire due cose insieme, o suggerirne una terza per via affettiva. Annota i doppi sensi e le connotazioni: spesso il non detto conta più del detto.',
+    'semantica.campo': 'Raccogli le parole per area di senso (natura, guerra, luce, morte…) e indica quale sfera domina il passo.',
+    'semantica.tema': 'Individua ciò che ritorna — un’immagine, un’idea, un contrasto — e formula in una frase il tema del passo.',
+    'semantica.scelta': 'Isola i termini marcati (arcaismi, tecnicismi, grecismi, parole rare) e spiega perché l’autore li ha preferiti ai sinonimi comuni.',
+    'semantica.senso': 'Segnala i doppi sensi e le connotazioni e annota ciò che la parola suggerisce oltre il significato letterale.',
     // Pragmatico-espressiva
-    'pragmatica.funzioni': 'Domàndati a che cosa serve l’enunciato: sfoga un’emozione, comanda, informa, gioca con la lingua stessa. La funzione che prevale orienta la lettura.',
-    'pragmatica.enunciazione': 'Rintraccia le impronte di chi parla: gli «io» e i «tu», i «qui» e gli «ora». Sono i ganci che fissano la voce a una persona e a un momento.',
-    'pragmatica.tono': 'Ascolta l’atteggiamento dietro le parole — solenne, ironico, dolente, esortativo. Il tono è la temperatura del testo, e tocca a te misurarla.',
-    'pragmatica.implicito': 'Pesa anche ciò che il testo tace o dà per scontato. Un presupposto, un sottinteso, una frase lasciata a metà dicono molto a chi sa ascoltare i silenzi.',
+    'pragmatica.funzioni': 'Stabilisci a che cosa serve l’enunciato (esprimere, esortare, informare, giocare con la lingua) e indica la funzione che prevale.',
+    'pragmatica.enunciazione': 'Sottolinea le marche di chi parla e a chi — gli «io» e i «tu», i «qui» e gli «ora» — e ricostruisci la scena della voce.',
+    'pragmatica.tono': 'Definisci con un aggettivo il tono dominante (solenne, ironico, dolente, esortativo) e mostra da quali parole lo ricavi.',
+    'pragmatica.implicito': 'Annota ciò che il testo dà per scontato o tace e spiega quale senso aggiunge questo non detto.',
     // Ipertestuale
-    'ipertesto.intertesto': 'Tendi l’orecchio a citazioni e allusioni: una parola altrui dentro il testo apre una porta su un’altra opera. Riconoscerla raddoppia il senso.',
-    'ipertesto.ipertestoderiv': 'Se un’intera opera nasce sul calco di un’altra, chiediti come la tratta: la continua con rispetto, la trasforma, o le fa il verso per rovesciarla?',
-    'ipertesto.architesto': 'Confronta il testo col suo genere: ne segue le regole o le forza? Spesso il punto vivo è proprio dove l’autore esce dai binari attesi.',
-    'ipertesto.paratesto': 'Non trascurare la cornice: un titolo, un’epigrafe, una dedica orientano la lettura prima del primo verso. Anche la soglia parla.',
-    'ipertesto.metatesto': 'Qui il testo si volta a parlare d’altri testi: li spiega, li giudica, li contesta. Segna con quale atteggiamento entra nel dialogo.',
+    'ipertesto.intertesto': 'Individua citazioni e allusioni ad altri testi e spiega che cosa cambia nella lettura se le riconosci.',
+    'ipertesto.ipertestoderiv': 'Indica il modello da cui il passo deriva e stabilisci come lo tratta: lo continua, lo trasforma o lo rovescia.',
+    'ipertesto.architesto': 'Confronta il passo con le regole del suo genere e segnala dove le rispetta e dove le forza.',
+    'ipertesto.paratesto': 'Esamina la cornice — titolo, epigrafe, dedica — e spiega come orienta la lettura del testo.',
+    'ipertesto.metatesto': 'Riconosci il testo commentato o discusso e indica con quale atteggiamento l’autore vi entra in dialogo.',
   };
   function getGuidaCategoria(livelloId, catId) { return GUIDE_CATEGORIE[livelloId + '.' + catId] || ''; }
 
@@ -550,7 +554,7 @@
     getPratica: getPratica,
     getGuidaCategoria: getGuidaCategoria,
     letturaRapporto: letturaRapporto,
-    versione: '1.3',
+    versione: '1.4',
   };
 
 })(typeof window !== 'undefined' ? window : this);
