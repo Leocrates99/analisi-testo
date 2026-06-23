@@ -21,7 +21,7 @@ riprende quella di **Poetrify**.
 | **Stilistico-retorica** | indaco | Figure di suono, d'ordine, tropi, figure di pensiero, stile/registro/sintassi, metrica |
 | **Semantico-lessicale** | verde | Campi e sfere semantiche, temi/motivi, scelta lessicale, sensi e connotazione |
 | **Pragmatico-espressiva** | azzurro | Funzioni linguistiche, enunciazione e deissi, tono/modalità/intenzione, implicito |
-| **Ipertestuale** | seppia | Eco interne, stesso autore, intertestualità con altri autori, topos e fortuna |
+| **Ipertestuale** | seppia | Le 5 relazioni di Genette (intertestualità, ipertestualità, architestualità, paratestualità, metatestualità) + compilazione riflessiva guidata |
 
 Ogni livello ha un **repertorio di voci** (figure retoriche, sfere, funzioni…)
 con definizione in tooltip — tutto definito in [`data/taxonomy.js`](data/taxonomy.js)
@@ -37,6 +37,26 @@ Ogni annotazione porta:
 
 Le note si possono raggruppare **per livello** (e categoria), **per importanza**
 o **in sequenza** nel testo, e filtrare per livello, importanza o ricerca testuale.
+
+### Il livello ipertestuale: compilazione riflessiva
+
+Quando si annota un rimando, oltre a *categoria* e *voce* si compilano dimensioni
+qualitative che traducono in pratica il quadro di Genette/Kristeva e guidano una
+lettura non generica:
+
+- **Ipotesto / modello** — il testo di riferimento (un passo in archivio o libero);
+- **Ambito** — stessa opera · stesso autore · altro autore · tradizione/fortuna;
+- **Pratica ipertestuale** — Parodia, Travestimento, Trasposizione, Pastiche, Charge,
+  Continuazione: la scelta deriva automaticamente **operazione** (trasformazione/imitazione)
+  e **tono** (ludico/satirico/serio);
+- **Visibilità × Postura** — i due assi (implicito↔esplicito, assorbimento↔distanziamento)
+  da cui lo strumento calcola la **lettura del rapporto** (citazione critica/parodia,
+  allusione ironica, influenza inconscia, imitazione dichiarata);
+- **Modo** — imitatio / aemulatio;
+- **Bussola riflessiva** — cinque domande che orientano la compilazione esaustiva.
+
+Tutte le voci e le dimensioni stanno in [`data/taxonomy.js`](data/taxonomy.js) (oggetto `IPERTESTO`)
+e sono facilmente ampliabili.
 
 ---
 

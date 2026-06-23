@@ -327,13 +327,27 @@
       ref = `<div class="nc-ref">${esc(a.refManuale)}</div>`;
     }
     let rimando = '';
-    if (a.livello === 'ipertesto' && a.rimando) {
-      let txt = '';
-      if (a.rimando.passoId) {
-        const tp = DB.passi.find((x) => x.id === a.rimando.passoId);
-        txt = tp ? '↪ ' + (tp.autore ? tp.autore + ', ' : '') + (tp.titolo || tp.opera || 'passo in archivio') : '';
-      } else if (a.rimando.libero) txt = '↪ ' + a.rimando.libero;
-      if (txt) rimando = `<div class="nc-link" style="color:var(--${l.colore})">${esc(txt)}</div>`;
+    let iperMeta = '';
+    if (a.livello === 'ipertesto') {
+      if (a.rimando) {
+        let txt = '';
+        if (a.rimando.passoId) {
+          const tp = DB.passi.find((x) => x.id === a.rimando.passoId);
+          txt = tp ? '↪ ' + (tp.autore ? tp.autore + ', ' : '') + (tp.titolo || tp.opera || 'passo in archivio') : '';
+        } else if (a.rimando.libero) txt = '↪ ' + a.rimando.libero;
+        if (txt) rimando = `<div class="nc-link" style="color:var(--${l.colore})">${esc(txt)}</div>`;
+      }
+      const ip = a.ipertesto || {};
+      const pills = [];
+      const amb = (T.IPERTESTO.ambiti.find((x) => x.id === ip.ambito) || {}).nome;
+      if (amb) pills.push(esc(amb));
+      const pr = T.getPratica(ip.pratica);
+      if (pr) pills.push(esc(pr.nome) + ' · ' + esc(pr.tono));
+      const lett = T.letturaRapporto(ip.visibilita, ip.postura);
+      if (lett) pills.push(esc(lett));
+      const md = (T.IPERTESTO.modo.find((x) => x.id === ip.modo) || {}).nome;
+      if (md) pills.push(esc(md));
+      if (pills.length) iperMeta = `<div class="nc-iper">${pills.map((t) => `<span>${t}</span>`).join('')}</div>`;
     }
     const tags = (a.tags || []).length ? `<div class="nc-tags">${a.tags.map((t) => `<span class="nc-tag">${esc(t)}</span>`).join('')}</div>` : '';
     return `<div class="note-card lv-${a.livello}" data-id="${a.id}">
@@ -345,6 +359,7 @@
       ${ref}
       ${a.commento ? `<div class="nc-comment">${esc(a.commento)}</div>` : ''}
       ${rimando}
+      ${iperMeta}
       ${tags}
     </div>`;
   }
@@ -362,7 +377,9 @@
       span: sel ? { start: sel.start, end: sel.end } : null,
       quote: sel ? sel.quote : '', refManuale: '', tags: [], commento: '',
       rimando: { passoId: '', libero: '' },
+      ipertesto: { ambito: '', pratica: '', visibilita: '', postura: '', modo: '' },
     };
+    if (!formState.ipertesto) formState.ipertesto = { ambito: '', pratica: '', visibilita: '', postura: '', modo: '' };
     if (sel) { formState.refType = 'span'; formState.span = { start: sel.start, end: sel.end }; formState.quote = sel.quote; }
     $('#modalTitle').textContent = existing ? 'Modifica annotazione' : 'Nuova annotazione';
     $('#btnDelete').style.display = existing ? '' : 'none';
@@ -426,16 +443,46 @@
       if (vdef) catHtml += `<p class="hint" style="margin:-8px 0 14px">${esc(vdef.def)}</p>`;
     }
 
-    // Rimando ipertestuale
+    // Blocco ipertestuale: ipotesto, ambito, pratica, assi, modo, bussola
     let rimHtml = '';
     if (fs.livello === 'ipertesto') {
-      rimHtml = '<div class="field"><label>Rimando a</label>'
+      const ip = fs.ipertesto || (fs.ipertesto = { ambito: '', pratica: '', visibilita: '', postura: '', modo: '' });
+      const IP = T.IPERTESTO;
+      const seg = (label, field, opts, hint) =>
+        `<div class="field"><label>${esc(label)}</label><div class="seg" data-field="${field}">`
+        + opts.map((o) => `<button type="button" data-v="${o.id}" class="${ip[field] === o.id ? 'on' : ''}"${o.descr ? ` title="${esc(o.descr)}"` : ''}>${esc(o.nome)}</button>`).join('')
+        + `</div>${hint ? `<p class="hint">${hint}</p>` : ''}</div>`;
+
+      rimHtml = '<div class="iper-block">';
+      // Ipotesto / modello
+      rimHtml += '<div class="field"><label>Ipotesto · modello di riferimento</label>'
         + '<select id="fRimPasso"><option value="">— passo in archivio (facolt.) —</option>'
         + DB.passi.filter((x) => x.id !== p.id).map((x) =>
           `<option value="${x.id}" ${fs.rimando && fs.rimando.passoId === x.id ? 'selected' : ''}>${esc((x.autore ? x.autore + ', ' : '') + (x.titolo || x.opera || 'passo'))}</option>`).join('')
         + '</select>'
-        + `<input type="text" id="fRimLibero" style="margin-top:8px" placeholder="oppure riferimento libero (autore, opera, luogo)" value="${esc(fs.rimando ? fs.rimando.libero : '')}">`
+        + `<input type="text" id="fRimLibero" style="margin-top:8px" placeholder="oppure: autore, opera, luogo del modello" value="${esc(fs.rimando ? fs.rimando.libero : '')}">`
         + '</div>';
+      // Ambito (dove sta il testo collegato)
+      rimHtml += seg('Ambito del rimando', 'ambito', IP.ambiti);
+      // Pratica ipertestuale (deriva operazione + tono)
+      rimHtml += '<div class="field"><label>Pratica ipertestuale</label>'
+        + '<select id="fPratica"><option value="">— non pertinente / da definire —</option>'
+        + IP.pratiche.map((pr) => `<option value="${pr.id}" ${ip.pratica === pr.id ? 'selected' : ''}>${esc(pr.nome)}</option>`).join('')
+        + '</select>';
+      const pr = T.getPratica(ip.pratica);
+      if (pr) rimHtml += `<p class="hint">${esc(pr.def)} → operazione: <b>${esc(pr.operazione)}</b> · tono: <b>${esc(pr.tono)}</b></p>`;
+      rimHtml += '</div>';
+      // Assi: visibilità × postura → lettura del rapporto
+      rimHtml += seg('Visibilità del rimando', 'visibilita', IP.visibilita);
+      rimHtml += seg('Postura verso il modello', 'postura', IP.postura);
+      const lettura = T.letturaRapporto(ip.visibilita, ip.postura);
+      if (lettura) rimHtml += `<div class="lettura">Lettura del rapporto: <b>${esc(lettura)}</b></div>`;
+      // Modo
+      rimHtml += seg('Modo', 'modo', IP.modo);
+      // Bussola riflessiva
+      rimHtml += '<details class="bussola"><summary>Bussola riflessiva — domande per compilare</summary><ol>'
+        + IP.bussola.map((q) => `<li>${esc(q)}</li>`).join('') + '</ol></details>';
+      rimHtml += '</div>';
     }
 
     // Tag liberi
@@ -496,6 +543,17 @@
       };
     }
     $$('#tagWrap [data-tagi]').forEach((b) => b.onclick = () => { fs.tags.splice(+b.dataset.tagi, 1); renderModalBody(); });
+    // blocco ipertestuale
+    const pratSel = $('#fPratica');
+    if (pratSel) pratSel.onchange = () => { syncFormFromInputs(); fs.ipertesto.pratica = pratSel.value; renderModalBody(); };
+    $$('#modalBody .seg').forEach((seg) => {
+      const field = seg.dataset.field;
+      $$('button', seg).forEach((b) => b.onclick = () => {
+        syncFormFromInputs();
+        fs.ipertesto[field] = fs.ipertesto[field] === b.dataset.v ? '' : b.dataset.v;
+        renderModalBody();
+      });
+    });
   }
 
   function saveAnnotation() {

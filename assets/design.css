@@ -304,6 +304,25 @@ textarea.text-input:focus { outline: none; border-color: var(--brand); }
 .imp-opt.sel.rilevante { background: var(--imp-rilevante); border-color: var(--imp-rilevante); color: #fff; }
 .imp-opt.sel.accessoria { background: var(--imp-accessoria); border-color: var(--imp-accessoria); color: #fff; }
 
+/* ── Blocco ipertestuale ────────────────────────────────── */
+.iper-block { border: 1px solid var(--ipertesto); border-radius: var(--radius-md); padding: 14px 14px 4px; margin-bottom: 16px; background: var(--ipertesto-bg); }
+.iper-block .field { margin-bottom: 12px; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { font-family: var(--font-ui); font-size: 12px; font-weight: 600; padding: 6px 11px; border: 1.5px solid var(--rule); border-radius: 20px; background: var(--paper); color: var(--sepia); cursor: pointer; transition: all 0.14s var(--ease); }
+.seg button:hover { border-color: var(--ipertesto); color: var(--ipertesto); }
+.seg button.on { background: var(--ipertesto); border-color: var(--ipertesto); color: #fff; }
+.lettura { font-family: var(--font-ui); font-size: 12.5px; color: var(--ink); background: var(--paper); border: 1px dashed var(--ipertesto); border-radius: var(--radius-sm); padding: 8px 12px; margin: -2px 0 12px; }
+.lettura b { color: var(--ipertesto); }
+.bussola { margin: 4px 0 8px; }
+.bussola > summary { cursor: pointer; font-family: var(--font-ui); font-size: 12px; font-weight: 700; color: var(--ipertesto); list-style: none; padding: 4px 0; }
+.bussola > summary::-webkit-details-marker { display: none; }
+.bussola > summary::before { content: '▸ '; }
+.bussola[open] > summary::before { content: '▾ '; }
+.bussola ol { margin: 6px 0 4px; padding-left: 20px; }
+.bussola li { font-family: var(--font-body); font-size: 13.5px; line-height: 1.5; color: var(--ink); margin-bottom: 5px; }
+.nc-iper { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.nc-iper span { font-family: var(--font-ui); font-size: 10.5px; font-weight: 600; color: var(--ipertesto); background: var(--ipertesto-bg); border: 1px solid var(--ipertesto); border-radius: 20px; padding: 2px 9px; }
+
 .tag-input-wrap { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 6px; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--paper); }
 .tag-input-wrap input { border: none; flex: 1; min-width: 100px; font-family: var(--font-body); font-size: 14px; padding: 4px; background: transparent; }
 .tag-input-wrap input:focus { outline: none; }

@@ -262,57 +262,137 @@
     },
 
     /* ===== 4. IPERTESTUALE =================================== */
+    /* Categorie = le cinque relazioni transtestuali di Genette.
+       Per la compilazione riflessiva (ambito, pratiche, assi,
+       bussola) vedi l'oggetto IPERTESTO più sotto. */
     {
       id: 'ipertesto',
       nome: 'Ipertestuale',
       breve: 'Rimandi e confronti',
       colore: 'ipertesto',
-      descr: 'Confronto con altri luoghi: stessa opera, stesso autore, altri autori, fortuna del passo.',
+      descr: 'Come il passo dialoga con altri testi: citazione, derivazione, genere, cornice, commento.',
       categorie: [
         {
-          id: 'interna', nome: 'Eco interna (stessa opera)',
-          descr: "Rimandi entro la stessa opera.",
+          id: 'intertesto', nome: 'Intertestualità (citazione, allusione)',
+          descr: 'Presenza effettiva di un testo dentro un altro.',
           voci: [
-            { nome: 'Ripresa lessicale interna', def: 'Stessa parola/immagine altrove nell\'opera.' },
-            { nome: 'Eco strutturale', def: 'Corrispondenza di posizione o struttura.' },
-            { nome: 'Anticipazione / richiamo', def: 'Prolessi o analessi tematica interna.' },
-            { nome: 'Leitmotiv', def: 'Motivo che attraversa l\'intera opera.' },
+            { nome: 'Citazione esplicita', def: 'Ripresa dichiarata e letterale di un luogo altrui.' },
+            { nome: 'Allusione', def: 'Richiamo non dichiarato ma riconoscibile a un lettore competente.' },
+            { nome: 'Reminiscenza / eco verbale', def: 'Ripresa di parole o iuncturae sedimentate dalla tradizione.' },
+            { nome: 'Ripresa non dichiarata', def: 'Riuso di un testo-fonte senza segnalazione.' },
+            { nome: 'Autocitazione', def: 'Ripresa di un proprio luogo (stesso autore).' },
           ],
         },
         {
-          id: 'autore', nome: 'Stesso autore (altra opera)',
-          descr: 'Rimandi ad altre opere dello stesso autore.',
+          id: 'ipertestoderiv', nome: 'Ipertestualità (derivazione)',
+          descr: 'Il passo deriva da un modello per trasformazione o imitazione.',
           voci: [
-            { nome: 'Autocitazione', def: 'Ripresa di un proprio luogo.' },
-            { nome: 'Costante tematica d\'autore', def: 'Tema ricorrente nella sua produzione.' },
-            { nome: 'Evoluzione stilistica', def: 'Differenza rispetto ad altra fase dell\'autore.' },
+            { nome: 'Parodia', def: 'Trasformazione ludica di un testo specifico (abbassa l\'eroico al comico).' },
+            { nome: 'Travestimento', def: 'Stessa storia, stile abbassato o burlesco.' },
+            { nome: 'Trasposizione', def: 'Trasformazione seria: cambia contesto/epoca, resta la struttura.' },
+            { nome: 'Pastiche', def: 'Imitazione ludica dello stile di un autore o di un\'epoca.' },
+            { nome: 'Charge', def: 'Imitazione satirica e deformante dello stile di un autore.' },
+            { nome: 'Continuazione / completamento', def: 'Imitazione seria: prosegue o completa il modello.' },
           ],
         },
         {
-          id: 'inter', nome: 'Intertestualità (altri autori)',
-          descr: 'Rapporti con testi di autori diversi.',
+          id: 'architesto', nome: 'Architestualità (genere e modello)',
+          descr: 'Rapporto con le categorie generali: genere, forma, modo.',
           voci: [
-            { nome: 'Fonte / modello', def: 'Testo da cui deriva o a cui si ispira.' },
-            { nome: 'Allusione', def: 'Richiamo implicito riconoscibile.' },
-            { nome: 'Citazione esplicita', def: 'Ripresa dichiarata e letterale.' },
-            { nome: 'Imitatio / aemulatio', def: 'Imitazione o gara con il modello.' },
-            { nome: 'Parodia / travestimento', def: 'Ripresa rovesciata o comica.' },
-            { nome: 'Traduzione / volgarizzamento', def: 'Resa in altra lingua di un modello.' },
+            { nome: 'Adesione al genere', def: 'Rispetto delle convenzioni del genere.' },
+            { nome: 'Scarto / sovversione del genere', def: 'Deformazione o rottura delle convenzioni.' },
+            { nome: 'Contaminazione di generi', def: 'Innesto di generi diversi.' },
+            { nome: 'Topos di genere', def: 'Luogo comune codificato dal genere.' },
+            { nome: 'Codice metrico-formale', def: 'Adesione a una forma metrica o strutturale codificata.' },
           ],
         },
         {
-          id: 'tradizione', nome: 'Topos e fortuna',
-          descr: 'Inserimento nella tradizione e ripresa posteriore.',
+          id: 'paratesto', nome: 'Paratestualità (cornice del testo)',
+          descr: 'Relazione con titolo, dediche, prefazioni, note, epigrafi.',
           voci: [
-            { nome: 'Topos / luogo comune', def: 'Schema codificato dalla tradizione.' },
-            { nome: 'Genere e modello', def: 'Rapporto con le convenzioni del genere.' },
-            { nome: 'Fortuna / ripresa posteriore', def: 'Riusi del passo in autori successivi.' },
-            { nome: 'Mito di riferimento', def: 'Materiale mitologico richiamato.' },
+            { nome: 'Titolo allusivo', def: 'Il titolo rinvia a un altro testo.' },
+            { nome: 'Epigrafe / esergo', def: 'Citazione in apertura che orienta la lettura.' },
+            { nome: 'Dedica', def: 'Indirizzo a un destinatario che colloca il testo.' },
+            { nome: 'Prefazione / nota d\'autore', def: 'Cornice autoriale che dialoga con altri testi.' },
+            { nome: 'Glossa / postilla', def: 'Annotazione a margine che richiama una fonte.' },
+          ],
+        },
+        {
+          id: 'metatesto', nome: 'Metatestualità (commento, critica)',
+          descr: 'Il passo commenta, valuta o discute un altro testo.',
+          voci: [
+            { nome: 'Commento / esegesi', def: 'Spiegazione di un altro testo.' },
+            { nome: 'Polemica / dialogo critico', def: 'Presa di posizione verso un altro autore.' },
+            { nome: 'Autocommento', def: 'L\'autore commenta la propria opera.' },
+            { nome: 'Giudizio / valutazione', def: 'Citazione per approvare o condannare.' },
+            { nome: 'Allegoria interpretativa', def: 'Rilettura di un testo in chiave altra.' },
           ],
         },
       ],
     },
   ];
+
+  /* ── Struttura operativa del livello IPERTESTUALE ─────────────
+     Tradotta dal quadro Genette/Kristeva: dimensioni qualitative
+     che guidano la compilazione riflessiva di un rimando. ── */
+  const IPERTESTO = {
+    // Dove si trova il testo collegato (richiesta originaria: stessa
+    // opera / stesso autore / altri autori / tradizione).
+    ambiti: [
+      { id: 'interna', nome: 'Stessa opera', descr: 'Eco entro la stessa opera (ripresa, leitmotiv, struttura).' },
+      { id: 'autore', nome: 'Stesso autore', descr: 'Altra opera dello stesso autore.' },
+      { id: 'altro', nome: 'Altro autore', descr: 'Testo di un autore diverso: fonte o modello.' },
+      { id: 'tradizione', nome: 'Tradizione / fortuna', descr: 'Canone, topos condiviso o ripresa posteriore.' },
+    ],
+    // Le sei pratiche ipertestuali = operazione × tono (matrice di Genette).
+    pratiche: [
+      { id: 'parodia',       nome: 'Parodia',        operazione: 'trasformazione', tono: 'ludico',   def: 'Trasformazione ludica di un testo specifico.' },
+      { id: 'travestimento', nome: 'Travestimento',  operazione: 'trasformazione', tono: 'satirico', def: 'Stessa storia, stile abbassato.' },
+      { id: 'trasposizione', nome: 'Trasposizione',  operazione: 'trasformazione', tono: 'serio',    def: 'Trasformazione seria: cambia contesto, resta la struttura.' },
+      { id: 'pastiche',      nome: 'Pastiche',        operazione: 'imitazione',     tono: 'ludico',   def: 'Imitazione ludica di uno stile.' },
+      { id: 'charge',        nome: 'Charge',          operazione: 'imitazione',     tono: 'satirico', def: 'Imitazione satirica e deformante di uno stile.' },
+      { id: 'continuazione', nome: 'Continuazione / Forger', operazione: 'imitazione', tono: 'serio', def: 'Imitazione seria: prosegue o completa il modello.' },
+    ],
+    operazioni: [
+      { id: 'trasformazione', nome: 'Trasformazione', descr: 'Si agisce sul contenuto o sulla struttura del modello.' },
+      { id: 'imitazione',     nome: 'Imitazione',     descr: 'Si riproduce lo stile o la maniera del modello.' },
+    ],
+    toni: [
+      { id: 'ludico', nome: 'Ludico' }, { id: 'satirico', nome: 'Satirico' }, { id: 'serio', nome: 'Serio' },
+    ],
+    // Asse 1: quanto è visibile il rimando.
+    visibilita: [
+      { id: 'implicito', nome: 'Implicito' }, { id: 'mediano', nome: 'Mediano' }, { id: 'esplicito', nome: 'Esplicito' },
+    ],
+    // Asse 2: che cosa fa il testo del modello.
+    postura: [
+      { id: 'assorbimento', nome: 'Assorbimento' }, { id: 'mediano', nome: 'Mediano' }, { id: 'distanziamento', nome: 'Distanziamento critico' },
+    ],
+    modo: [
+      { id: 'imitatio',  nome: 'Imitatio',  descr: 'Emulazione fedele del modello.' },
+      { id: 'aemulatio', nome: 'Aemulatio', descr: 'Gara con il modello per superarlo.' },
+    ],
+    // Lettura del rapporto intertestuale data da visibilità × postura.
+    quadranti: {
+      'esplicito|distanziamento': 'Citazione critica / parodia',
+      'implicito|distanziamento': 'Allusione ironica',
+      'implicito|assorbimento': 'Influenza inconscia',
+      'esplicito|assorbimento': 'Imitazione dichiarata',
+    },
+    // Domande che orientano la compilazione (non griglia rigida).
+    bussola: [
+      'C’è un ipotesto (modello) riconoscibile alla base del passo? Quale?',
+      'Il rapporto col modello è trasformazione o imitazione?',
+      'Il tono verso il modello è serio, satirico o ludico?',
+      'Quanto è visibile il rimando? Il passo funziona anche senza riconoscerlo?',
+      'Che cosa fa l’autore del modello: lo continua, lo supera (aemulatio), lo rovescia?',
+    ],
+  };
+  function getPratica(id) { return IPERTESTO.pratiche.find(function (p) { return p.id === id; }); }
+  function letturaRapporto(vis, post) {
+    if (!vis || !post || vis === 'mediano' || post === 'mediano') return '';
+    return IPERTESTO.quadranti[vis + '|' + post] || '';
+  }
 
   /* ── Helper di accesso ────────────────────────────────────── */
   function getLivello(id) { return LIVELLI.find(function (l) { return l.id === id; }); }
@@ -327,10 +407,13 @@
     IMPORTANZE: IMPORTANZE,
     GENERI: GENERI,
     LINGUE: LINGUE,
+    IPERTESTO: IPERTESTO,
     getLivello: getLivello,
     getCategoria: getCategoria,
     getImportanza: getImportanza,
-    versione: '1.0',
+    getPratica: getPratica,
+    letturaRapporto: letturaRapporto,
+    versione: '1.1',
   };
 
 })(typeof window !== 'undefined' ? window : this);
