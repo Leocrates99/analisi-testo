@@ -79,7 +79,10 @@
         <input type="text" class="notes-search" id="notesSearch" placeholder="Cerca tra commenti, voci, citazioni, tag…">
         <div class="nh-row" style="margin-top:10px">
           <span class="nh-count" id="notesCount">0 note</span>
-          <button class="btn ghost sm" id="btnExportPasso" title="Esporta solo questo passo">Esporta passo</button>
+          <div style="display:flex;gap:6px">
+            <button class="btn ghost sm" id="btnDossier" title="Dossier completo stampabile / PDF">Dossier (PDF)</button>
+            <button class="btn ghost sm" id="btnExportPasso" title="Esporta solo questo passo (JSON)">Esporta passo</button>
+          </div>
         </div>
       </div>
       <div class="notes-list" id="notesList"></div>
@@ -110,6 +113,8 @@
 <div class="toast" id="toast"></div>
 
 <script src="data/taxonomy.js"></script>
+<script src="data/commento.js"></script>
+<script src="data/interpretazione.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>

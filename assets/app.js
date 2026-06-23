@@ -9,6 +9,21 @@
 
   const T = window.AT_TASSONOMIA;
   const STORE_KEY = 'analisitesto.db.v1';
+  const SCHEMA = 2; // versione del modello dati; bump quando cambiano gli id
+  // Migrazione id di categoria rinominati tra le versioni → niente annotazioni orfane
+  const CAT_MIGRATION = {
+    retorica: { ordine: 'sintassi', tropi: 'significato' },
+    ipertesto: { interna: 'intertesto', autore: 'intertesto', inter: 'intertesto', tradizione: 'architesto' },
+  };
+  function migrate(db) {
+    if (db.schema >= SCHEMA) return db;
+    (db.passi || []).forEach((p) => (p.annotazioni || []).forEach((a) => {
+      const m = CAT_MIGRATION[a.livello];
+      if (m && m[a.categoria]) a.categoria = m[a.categoria];
+    }));
+    db.schema = SCHEMA;
+    return db;
+  }
 
   /* ── Stato ────────────────────────────────────────────────── */
   let DB = { passi: [], currentId: null };
@@ -18,6 +33,7 @@
   let formState = null;      // stato volatile del form
   let dirty = false;
   let batch = { on: false, livello: '', categoria: '', voce: '', importanza: 'rilevante', count: 0 }; // analisi rapida
+  let textEditOld = null;    // testo precedente, per riallineare le evidenziature dopo una modifica
 
   /* ── Utility ──────────────────────────────────────────────── */
   const $ = (s, r) => (r || document).querySelector(s);
@@ -60,11 +76,38 @@
       if (raw) DB = JSON.parse(raw);
     } catch (e) { console.warn('Lettura DB fallita', e); }
     if (!DB.passi) DB.passi = [];
+    if (!DB.meta) DB.meta = {};
+    migrate(DB);
   }
   function save() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(DB)); setDirty(false); }
-    catch (e) { console.error('Salvataggio fallito', e); toast('⚠ Salvataggio non riuscito'); }
+    DB.schema = SCHEMA;
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(DB));
+      setDirty(false); hideQuotaBanner();
+    } catch (e) {
+      console.error('Salvataggio fallito', e);
+      showQuotaBanner();  // memoria piena: avviso bloccante, non un toast effimero
+    }
   }
+  // C'è lavoro non ancora messo in un file di backup?
+  function backupPending() {
+    if (!DB.passi.length) return false;
+    const last = DB.meta && DB.meta.lastExport;
+    if (!last) return true;
+    return DB.passi.some((p) => (p.modificato || p.creato || '') > last);
+  }
+  function showQuotaBanner() {
+    let b = $('#quotaBanner');
+    if (!b) {
+      b = document.createElement('div');
+      b.id = 'quotaBanner'; b.className = 'quota-banner';
+      b.innerHTML = '<span>⚠ Memoria del browser piena: l\'ultima modifica <b>non è stata salvata</b>. Esporta i dati per non perderli, poi libera spazio.</span><button class="btn sm" id="quotaExport">Esporta ora</button>';
+      document.body.appendChild(b);
+      $('#quotaExport').onclick = () => exportData(false);
+    }
+    b.style.display = 'flex';
+  }
+  function hideQuotaBanner() { const b = $('#quotaBanner'); if (b) b.style.display = 'none'; }
   function setDirty(v) {
     dirty = v;
     const d = $('#saveDot');
@@ -91,12 +134,22 @@
   function renderArchive() {
     const grid = $('#passiGrid');
     if (!DB.passi.length) {
-      grid.innerHTML = '<div class="empty-state">'
-        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
-        + '<p>Nessun passo in archivio.<br>Crea il primo testo da analizzare.</p></div>';
+      grid.innerHTML = '<div class="welcome">'
+        + '<h3>Come funziona, in tre passi</h3>'
+        + '<ol class="welcome-steps">'
+        + '<li><b>Crea un passo</b> (o caricane uno d\'esempio): autore, opera, testo.</li>'
+        + '<li><b>Evidenzia e annota</b> su quattro livelli — forma, parole, comunicazione, dialogo.</li>'
+        + '<li><b>Commenta e interpreta</b>: lo strumento raccoglie le annotazioni e ti guida fino alla tesi.</li>'
+        + '</ol>'
+        + '<div class="welcome-actions"><button class="btn primary" id="btnDemo">Carica il passo d\'esempio</button><button class="btn" id="btnNuovoPasso2">＋ Crea il tuo</button></div></div>';
+      $('#btnDemo').onclick = loadDemo;
+      $('#btnNuovoPasso2').onclick = () => openPassoModal(null);
       return;
     }
-    grid.innerHTML = DB.passi.map((p) => {
+    const remind = backupPending()
+      ? '<div class="backup-reminder" style="grid-column:1/-1">Hai modifiche non ancora salvate in un file. <button class="btn sm" id="btnBackupNow">Esporta backup</button></div>'
+      : '';
+    grid.innerHTML = remind + DB.passi.map((p) => {
       const counts = {};
       (p.annotazioni || []).forEach((a) => { counts[a.livello] = (counts[a.livello] || 0) + 1; });
       const dots = T.LIVELLI.filter((l) => counts[l.id]).map((l) =>
@@ -112,6 +165,38 @@
         <button class="btn ghost sm pc-del danger" data-del="${p.id}">Elimina</button>
       </div>`;
     }).join('');
+    const bn = $('#btnBackupNow'); if (bn) bn.onclick = () => exportData(false);
+  }
+
+  // Passo dimostrativo: insegna il flusso annota → commenta → interpreta.
+  function demoPasso() {
+    const t = now();
+    return {
+      id: 'demo-' + uid(), autore: 'Catullo', opera: 'Liber, carme 5', titolo: 'Vivamus, mea Lesbia (esempio)',
+      genere: 'poesia', lingua: 'la', mode: 'con', demo: true,
+      testo: 'Vivamus, mea Lesbia, atque amemus,\nrumoresque senum severiorum\nomnes unius aestimemus assis.',
+      annotazioni: [
+        { id: uid(), livello: 'retorica', categoria: 'suono', voce: 'Allitterazione', importanza: 'chiave', refType: 'span', span: { start: 0, end: 7 }, quote: 'Vivamus', refManuale: '', tags: [], commento: 'Allitterazione in V-/M- che apre il carme con slancio vitale.', rimando: { passoId: '', libero: '' }, ipertesto: {}, creato: t, modificato: t },
+        { id: uid(), livello: 'retorica', categoria: 'pensiero', voce: 'Apostrofe', importanza: 'rilevante', refType: 'span', span: { start: 9, end: 19 }, quote: 'mea Lesbia', refManuale: '', tags: ['amore'], commento: 'Apostrofe a Lesbia: instaura subito il tu dialogico.', rimando: { passoId: '', libero: '' }, ipertesto: {}, creato: t, modificato: t },
+        { id: uid(), livello: 'retorica', categoria: 'suono', voce: 'Allitterazione', importanza: 'accessoria', refType: 'span', span: { start: 46, end: 62 }, quote: 'senum severiorum', refManuale: '', tags: [], commento: 'Allitterazione in s- che mima il sibilo dei vecchi censori.', rimando: { passoId: '', libero: '' }, ipertesto: {}, creato: t, modificato: t },
+        { id: uid(), livello: 'ipertesto', categoria: 'intertesto', voce: 'Allusione', importanza: 'rilevante', refType: 'manuale', span: null, quote: '', refManuale: 'vv. 1-3', tags: [], commento: 'Il motivo dell\'amore contro il tempo dialoga con la lirica greca.', rimando: { passoId: '', libero: 'Saffo, fr. 31 V.' }, ipertesto: { ambito: 'altro', pratica: '', visibilita: 'esplicito', postura: 'assorbimento', modo: 'imitatio' }, creato: t, modificato: t },
+      ],
+      commento: { modo: 'classico', campi: {
+        'morfosintassi.costrutti': 'I congiuntivi esortativi (vivamus, amemus, aestimemus) costruiscono l\'invito a vivere.',
+        'intertesto.modello': 'Dietro il carpe diem agisce la tradizione simposiale e Saffo.',
+      } },
+      interpretazione: { dati: {
+        'identikit.autoreOpera': 'Catullo, Liber, carme 5, vv. 1-3',
+        'letterale.parafrasi': 'Viviamo, o mia Lesbia, e amiamo, e stimiamo un solo soldo le chiacchiere dei vecchi troppo severi.',
+        'ermeneutica.sintesi': 'La forma esortativa e l\'allitterazione vitale traducono in suono l\'urgenza dell\'amore contro il tempo.',
+      } },
+      creato: t, modificato: t,
+    };
+  }
+  function loadDemo() {
+    const d = demoPasso();
+    DB.passi.push(d); DB.currentId = d.id; save(); go(true);
+    toast('Passo d\'esempio caricato — esploralo, poi eliminalo quando vuoi.');
   }
 
   /* ============================================================
@@ -193,6 +278,11 @@
       $('#saveText').onclick = () => {
         const v = $('#textInput').value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
         if (!v.trim()) { toast('Inserisci del testo'); return; }
+        if (textEditOld !== null && textEditOld !== v) {
+          const r = reanchorAnnotations(p, v);
+          if (r.moved || r.orphan) toast('Testo aggiornato: ' + r.moved + ' evidenziature riallineate' + (r.orphan ? ', ' + r.orphan + ' da rivedere' : '') + '.');
+        }
+        textEditOld = null;
         p.testo = v; p.modificato = now(); setDirty(true); save(); renderTextPanel(p); renderNotes(p);
       };
       return;
@@ -214,12 +304,27 @@
       });
     });
     $('#editText').onclick = () => {
-      if (!confirm('Modificare il testo? Le evidenziature restano legate alle posizioni: se cambi molto il testo, alcune potrebbero non combaciare più.')) return;
-      const t = p.testo; p.testo = '';
+      textEditOld = p.testo; p.testo = '';
       renderTextPanel(p);
-      $('#textInput').value = t;
+      $('#textInput').value = textEditOld;
     };
     $('#selAnnotate').onclick = () => { if (pendingSel) openModal(null, pendingSel); };
+  }
+
+  // Dopo una modifica del testo, riallinea le evidenziature: se la posizione
+  // non combacia più, cerca la citazione nel nuovo testo; se non è univoca,
+  // la marca come "orfana" (resta nella lista, senza evidenziatura sbagliata).
+  function reanchorAnnotations(p, newText) {
+    let moved = 0, orphan = 0;
+    (p.annotazioni || []).forEach((a) => {
+      if (a.refType !== 'span' || !a.span) return;
+      if (newText.slice(a.span.start, a.span.end) === a.quote) { a.orphan = false; return; }
+      const qt = a.quote || '';
+      if (qt && newText.indexOf(qt) === newText.lastIndexOf(qt) && newText.indexOf(qt) !== -1) {
+        const i = newText.indexOf(qt); a.span = { start: i, end: i + qt.length }; a.orphan = false; moved++;
+      } else { a.orphan = true; orphan++; }
+    });
+    return { moved: moved, orphan: orphan };
   }
 
   // Costruisce l'HTML del testo con i <mark> per le annotazioni "span"
@@ -227,7 +332,7 @@
     const lines = p.testo.split('\n');
     const starts = []; let acc = 0;
     lines.forEach((ln) => { starts.push(acc); acc += ln.length + 1; });
-    const spanAnns = (p.annotazioni || []).filter((a) => a.refType === 'span' && a.span);
+    const spanAnns = (p.annotazioni || []).filter((a) => a.refType === 'span' && a.span && !a.orphan && a.span.end <= p.testo.length);
     const cls = (p.genere === 'poesia' ? 'poesia' : '') + (batch.on ? ' batch-on' : '');
     const html = lines.map((ln, i) => {
       const lineStart = starts[i];
@@ -399,6 +504,7 @@
     if (a.refType === 'span' && a.quote) {
       const q = a.quote.replace(/\s+/g, ' ').trim();
       ref = `<div class="nc-quote">${esc(q.length > 140 ? q.slice(0, 140) + '…' : q)}</div>`;
+      if (a.orphan) ref += '<div class="nc-warn">↯ posizione da rivedere dopo la modifica del testo</div>';
     } else if (a.refManuale) {
       ref = `<div class="nc-ref">${esc(a.refManuale)}</div>`;
     }
@@ -781,8 +887,108 @@
     a.href = URL.createObjectURL(blob);
     a.download = 'analisi-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.json';
     a.click(); URL.revokeObjectURL(a.href);
+    if (!onlyCurrent) { if (!DB.meta) DB.meta = {}; DB.meta.lastExport = now(); save(); renderArchive(); }
     toast('Esportato');
   }
+
+  /* ── Dossier unico (annotazioni + commento + interpretazione) in HTML
+        stampabile → PDF dal browser ── */
+  function buildDossierHTML(p) {
+    const C = window.AT_COMMENTO, I = window.AT_INTERPRETAZIONE;
+    const lin = (T.LINGUE.find((g) => g.id === p.lingua) || {}).nome || '';
+    const gen = (T.GENERI.find((g) => g.id === p.genere) || {}).nome || '';
+    let testoHtml = '';
+    if (p.testo) {
+      const lines = p.testo.split('\n');
+      testoHtml = `<div class="d-testo${p.genere === 'poesia' ? ' poesia' : ''}">`
+        + lines.map((l) => `<div class="d-verso">${esc(l) || '&nbsp;'}</div>`).join('') + '</div>';
+    }
+    let annHtml = '';
+    T.LIVELLI.forEach((lv) => {
+      const sub = (p.annotazioni || []).filter((a) => a.livello === lv.id);
+      if (!sub.length) return;
+      annHtml += `<h3 class="d-lv lv-${lv.colore}">${esc(lv.nome)}</h3>`;
+      const byCat = {}; sub.forEach((a) => { (byCat[a.categoria] = byCat[a.categoria] || []).push(a); });
+      Object.keys(byCat).forEach((catId) => {
+        const cat = T.getCategoria(lv.id, catId);
+        annHtml += `<div class="d-cat">${esc(cat ? cat.nome : catId)}</div>`;
+        byCat[catId].forEach((a) => {
+          const imp = (T.getImportanza(a.importanza) || {}).nome || '';
+          const ref = a.refType === 'span' && a.quote ? '«' + a.quote.replace(/\s+/g, ' ').trim() + '»' : (a.refManuale || '');
+          let extra = '';
+          if (a.livello === 'ipertesto') {
+            const bits = [];
+            if (a.rimando && a.rimando.libero) bits.push('↪ ' + a.rimando.libero);
+            const lett = T.letturaRapporto((a.ipertesto || {}).visibilita, (a.ipertesto || {}).postura);
+            if (lett) bits.push(lett);
+            if (bits.length) extra = ' — ' + bits.join(' · ');
+          }
+          const tags = (a.tags || []).length ? ' [' + a.tags.join(', ') + ']' : '';
+          annHtml += `<p class="d-ann"><span class="d-imp imp-${a.importanza}">${esc(imp)}</span> ${ref ? '<i>' + esc(ref) + '</i> — ' : ''}${a.voce ? '<b>' + esc(a.voce) + '</b>: ' : ''}${esc((a.commento || '') + extra + tags)}</p>`;
+        });
+      });
+    });
+    let comHtml = '';
+    if (C && p.commento && p.commento.campi) {
+      const proto = C.getProtocollo(p.commento.modo);
+      proto.fasi.forEach((f) => {
+        const bl = f.campi.map((cmp) => { const v = (p.commento.campi[f.id + '.' + cmp.id] || '').trim(); return v ? `<p class="d-field"><b>${esc(cmp.label)}.</b> ${esc(v)}</p>` : ''; }).filter(Boolean);
+        if (bl.length) comHtml += `<h3>${f.n}. ${esc(f.nome)}</h3>` + bl.join('');
+      });
+    }
+    let intHtml = '';
+    if (I && p.interpretazione && p.interpretazione.dati) {
+      const d = p.interpretazione.dati;
+      I.SEZIONI.forEach((sez) => {
+        const bl = [];
+        sez.campi.forEach((c) => {
+          const v = d[sez.id + '.' + c.id];
+          if (c.type === 'text') { if (v && v.trim()) bl.push(`<p class="d-field"><b>${esc(c.label)}.</b> ${esc(v.trim())}</p>`); }
+          else if (c.type === 'choice') { if (v && (v.scelta || (v.nota || '').trim())) { const o = c.options.find((x) => x.id === v.scelta); bl.push(`<p class="d-field"><b>${esc(c.label)}:</b> ${esc([(o ? o.nome : ''), (v.nota || '').trim()].filter(Boolean).join(' — '))}</p>`); } }
+          else if (c.type === 'tags') { if (v && v.length) bl.push(`<p class="d-field"><b>${esc(c.label)}:</b> ${esc(v.join(' · '))}</p>`); }
+          else if (c.type === 'list') { const rows = (v || []).filter((r) => Object.keys(r).some((k) => r[k] && String(r[k]).trim())); if (rows.length) { const items = rows.map((r) => { const vals = c.cols.map((col) => { if (col.type === 'choice') { const o = col.options.find((x) => x.id === r[col.id]); return o ? o.nome : ''; } return r[col.id] || ''; }); return '<li>' + esc(vals.filter(Boolean).join(' → ')) + '</li>'; }); bl.push(`<p class="d-field"><b>${esc(c.label)}:</b></p><ul>${items.join('')}</ul>`); } }
+        });
+        if (bl.length) intHtml += `<h3>${sez.icona || ''} ${esc(sez.nome)}</h3>` + bl.join('');
+      });
+    }
+    const css = ':root{--retorica:#1800AC;--semantica:#2f855a;--pragmatica:#2b6cb0;--ipertesto:#9c6b3c;--ink:#2c3539;--sepia:#6b6660;--rule:#d5d2cb;}'
+      + '*{box-sizing:border-box}body{font-family:Georgia,"Times New Roman",serif;color:var(--ink);line-height:1.6;margin:0;background:#f5f4f0}'
+      + 'article{max-width:760px;margin:0 auto;background:#fff;padding:48px 56px}'
+      + 'header{border-bottom:2px solid var(--rule);padding-bottom:16px;margin-bottom:24px}'
+      + '.d-author{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--sepia)}'
+      + 'h1{font-size:30px;color:#1800AC;margin:6px 0}.d-sub{font-style:italic;color:var(--sepia)}'
+      + 'h2{font-size:20px;color:#1800AC;border-bottom:1px solid var(--rule);padding-bottom:4px;margin:28px 0 12px}'
+      + 'h3{font-size:15px;margin:16px 0 6px}.d-lv{font-variant:small-caps;letter-spacing:.03em}'
+      + '.d-lv.lv-retorica{color:var(--retorica)}.d-lv.lv-semantica{color:var(--semantica)}.d-lv.lv-pragmatica{color:var(--pragmatica)}.d-lv.lv-ipertesto{color:var(--ipertesto)}'
+      + '.d-cat{font-size:12px;font-weight:bold;color:var(--sepia);text-transform:uppercase;letter-spacing:.04em;margin:10px 0 2px}'
+      + '.d-ann{margin:4px 0 4px 0;font-size:15px}.d-imp{font-size:10px;font-weight:bold;color:#fff;padding:1px 6px;border-radius:3px;vertical-align:middle}'
+      + '.imp-chiave{background:#c53030}.imp-rilevante{background:#d69e2e}.imp-accessoria{background:#8a857d}'
+      + '.d-testo{white-space:pre-wrap;background:#fcfbf8;border:1px solid var(--rule);border-radius:6px;padding:18px 22px;font-size:16px}'
+      + '.d-testo.poesia{counter-reset:v}.d-testo.poesia .d-verso{position:relative;padding-left:2.4em}'
+      + '.d-testo.poesia .d-verso:before{counter-increment:v;content:counter(v);position:absolute;left:0;width:1.8em;text-align:right;font-size:11px;color:#bbb}'
+      + '.d-field{margin:4px 0;font-size:15px}ul{margin:2px 0 8px;padding-left:22px}'
+      + '.d-bar{position:sticky;top:0;background:#1800AC;padding:10px;text-align:center}'
+      + '.d-bar button{font:600 14px sans-serif;padding:8px 18px;border:none;border-radius:5px;background:#fff;color:#1800AC;cursor:pointer}'
+      + '@media print{.d-bar{display:none}body{background:#fff}article{padding:0;max-width:none}}';
+    return '<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><title>Dossier — ' + esc(p.titolo || 'passo') + '</title><style>' + css + '</style></head><body>'
+      + '<div class="d-bar"><button onclick="window.print()">Stampa / Salva come PDF</button></div>'
+      + '<article><header><div class="d-author">' + esc(p.autore || '') + '</div><h1>' + esc(p.titolo || 'Senza titolo') + '</h1><div class="d-sub">' + esc([p.opera, gen, lin].filter(Boolean).join(' · ')) + '</div></header>'
+      + (testoHtml ? '<section><h2>Il testo</h2>' + testoHtml + '</section>' : '')
+      + (annHtml ? '<section><h2>Annotazioni</h2>' + annHtml + '</section>' : '')
+      + (comHtml ? '<section><h2>Commento</h2>' + comHtml + '</section>' : '')
+      + (intHtml ? '<section><h2>Interpretazione</h2>' + intHtml + '</section>' : '')
+      + '</article></body></html>';
+  }
+  function exportDossier() {
+    const p = currentPasso(); if (!p) return;
+    const blob = new Blob([buildDossierHTML(p)], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, '_blank');
+    if (!w) { const a = document.createElement('a'); a.href = url; a.download = 'dossier-' + (p.titolo || 'passo').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.html'; a.click(); }
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    toast('Dossier generato: stampa o salva in PDF');
+  }
+
   function importData(file) {
     const r = new FileReader();
     r.onload = () => {
@@ -810,6 +1016,7 @@
     $('#btnArchivio').onclick = () => { DB.currentId = null; go(false); };
     $('#btnExport').onclick = () => exportData(false);
     $('#btnExportPasso') && ($('#btnExportPasso').onclick = () => exportData(true));
+    $('#btnDossier') && ($('#btnDossier').onclick = exportDossier);
     $('#btnImport').onclick = () => $('#fileImport').click();
     $('#btnImportArch').onclick = () => $('#fileImport').click();
     $('#fileImport').onchange = (e) => { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; };
