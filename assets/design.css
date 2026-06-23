@@ -412,6 +412,31 @@ textarea.text-input:focus { outline: none; border-color: var(--brand); }
 
 .principio { max-width: 640px; margin: 8px auto 0; text-align: center; font-family: var(--font-body); font-style: italic; font-size: 15px; line-height: 1.6; color: var(--sepia); border-top: 1px solid var(--rule-soft); padding-top: 20px; }
 
+/* ── Interpretazione guidata (Fase 3) ───────────────────── */
+.consiglio-box { display: flex; gap: 12px; align-items: flex-start; background: var(--attenzione-bg, #fef9ec); border: 1px solid #e6c75a; border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 20px; }
+.consiglio-label { flex: none; font-family: var(--font-ui); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #9a7a16; white-space: nowrap; }
+.consiglio-box p { font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+
+.isez .fase-n { font-size: 18px; background: transparent; color: inherit; width: auto; height: auto; }
+.tag-max { font-weight: 400; text-transform: none; color: var(--sepia); letter-spacing: 0; }
+
+/* campo tesi (sintesi critica) evidenziato */
+.tesi-field { background: var(--brand-soft); border: 1px solid var(--brand); border-radius: var(--radius-md); padding: 14px 16px; margin-top: 8px; }
+.tesi-field label { color: var(--brand); }
+.tesi-field .cmp-ta { background: var(--paper); }
+
+/* liste dinamiche */
+.ilist-empty { font-family: var(--font-ui); font-size: 12.5px; color: var(--sepia); font-style: italic; padding: 4px 0 8px; }
+.ilist-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; }
+.ilist-cellwrap { flex: 1; }
+.ilist-collabel { display: block; font-family: var(--font-ui); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--sepia); margin-bottom: 3px; }
+.ilist-cell { width: 100%; font-family: var(--font-body); font-size: 14px; padding: 8px 10px; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--paper); color: var(--ink); }
+.ilist-cell:focus { outline: none; border-color: var(--brand); }
+.seg.sm button { font-size: 11px; padding: 5px 9px; }
+.ilist-del { flex: none; align-self: center; border: none; background: none; cursor: pointer; color: var(--sepia); font-size: 14px; padding: 4px 6px; border-radius: var(--radius-sm); }
+.ilist-del:hover { color: var(--imp-chiave); background: var(--cream); }
+.ilist-ctrl { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+
 @media (max-width: 620px) {
   .vade-row { grid-template-columns: 1fr; gap: 4px; }
   .mat-list { grid-template-columns: 1fr; }

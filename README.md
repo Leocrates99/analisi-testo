@@ -80,13 +80,16 @@ analisi-testo/
 ├─ index.html            ← hub (Analisi · Commento · Interpretazione guidata)
 ├─ analisi.html          ← lo strumento di analisi (Fase 1)
 ├─ commento.html         ← l'officina del commento (Fase 2)
+├─ interpretazione.html  ← il foglio di lavoro dell'interpretazione guidata (Fase 3)
 ├─ assets/
 │   ├─ design.css        ← design system (token Poetrify + componenti)
 │   ├─ app.js            ← logica Analisi: stato, evidenziatura, form, filtri, import/export
-│   └─ commento.js       ← logica Commento: fasi, materiali, autosalvataggio, export
+│   ├─ commento.js       ← logica Commento: fasi, materiali, autosalvataggio, export
+│   └─ interpretazione.js← logica Interpretazione: campi tipizzati, liste, import, export
 ├─ data/
 │   ├─ taxonomy.js       ← i 4 livelli, le categorie e il repertorio di voci
-│   └─ commento.js       ← il protocollo di commento (moderno + filologico) e il vademecum
+│   ├─ commento.js       ← il protocollo di commento (moderno + filologico) e il vademecum
+│   └─ interpretazione.js← la scheda analitica a 5 sezioni e i campi tipizzati
 └─ .github/workflows/
     └─ deploy.yml        ← pubblicazione automatica su GitHub Pages
 ```
@@ -113,10 +116,25 @@ Ogni fase mostra l'obiettivo, l'**errore da evitare**, e i **materiali raccolti*
 Una barra di avanzamento misura i campi compilati; il commento si esporta in Markdown.
 In testa, il **vademecum** e il principio *«la forma è contenuto»*.
 
-## Fasi successive (previste)
+## Interpretazione guidata (Fase 3)
 
-- **Fase 3 — Interpretazione guidata**: percorso di domande dall'osservazione
-  all'ipotesi interpretativa argomentata.
+Un **foglio di lavoro** ([`interpretazione.html`](interpretazione.html)) in 5 sezioni che
+porta dall'osservazione alla **tesi critica**:
+
+1. Identikit e costituzione del testo · 2. Decodifica letterale e architettura sintattica ·
+   3. Involucro formale (metrica, fonica, ritmo) · 4. Smontaggio retorico e rete
+   intertestuale · 5. Ermeneutica, antropologia e **sintesi critica**.
+
+A differenza del Commento (prosa continua), è una scheda di **campi mirati**: aree di
+testo, scelte (ipotassi/paratassi), parole-chiave, e **righe dinamiche** —
+enjambement (verso X/Y → parole isolate), tropi (**Veicolo → Tenore**), intertesti
+(testo + strategia **Imitazione / Variatio / Oppositio**). Ogni lista si può **importare
+dalle annotazioni**: la strategia di ripresa, ad esempio, viene dedotta dai qualificatori
+ipertestuali (pratica, postura, modo) raccolti in Fase 1. Barra di avanzamento,
+autosalvataggio ed export Markdown. In testa, il consiglio metodologico
+sull'esposizione lineare.
+
+Le tre fasi condividono lo stesso archivio: **annotare → commentare → interpretare**.
 
 ## Deploy
 
