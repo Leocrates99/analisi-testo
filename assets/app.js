@@ -17,6 +17,7 @@
   let editingId = null;      // annotazione in modifica
   let formState = null;      // stato volatile del form
   let dirty = false;
+  let batch = { on: false, livello: '', categoria: '', voce: '', importanza: 'rilevante', count: 0 }; // analisi rapida
 
   /* ── Utility ──────────────────────────────────────────────── */
   const $ = (s, r) => (r || document).querySelector(s);
@@ -32,6 +33,20 @@
     pragmatica: 'rgba(43,108,176,0.18)',
     ipertesto: 'rgba(156,107,60,0.22)',
   };
+
+  // Prefissi per il costruttore rapido del riferimento (modalità senza testo)
+  const REF_PREFIXES = [
+    { v: 'v.', label: 'v.' }, { v: 'vv.', label: 'vv.' },
+    { v: 'r.', label: 'r.' }, { v: 'rr.', label: 'rr.' },
+    { v: 'p.', label: 'p.' }, { v: '§', label: '§' },
+    { v: '«»', label: '« cit. »' },
+  ];
+  function composeRef(px, loc) {
+    loc = (loc || '').trim();
+    if (px === '«»') return loc ? '«' + loc + '»' : '';
+    if (!loc) return px || '';
+    return (px ? px + ' ' : '') + loc;
+  }
 
   function toast(msg) {
     const t = $('#toast'); t.textContent = msg; t.classList.add('show');
@@ -116,6 +131,48 @@
     $$('#modeToggle button').forEach((b) => b.classList.toggle('active', b.dataset.mode === (p.mode || 'con')));
     renderTextPanel(p);
     renderNotes(p);
+    renderBatchBar();
+  }
+
+  /* ── Analisi rapida (batch): bersaglio fisso, taggi sweeping il testo ── */
+  function renderBatchBar() {
+    const bar = $('#batchBar'); if (!bar) return;
+    const btn = $('#btnBatch');
+    if (!batch.on) { bar.innerHTML = ''; bar.classList.remove('on'); if (btn) btn.classList.remove('active'); return; }
+    bar.classList.add('on'); if (btn) btn.classList.add('active');
+    const p = currentPasso();
+    const liv = T.getLivello(batch.livello);
+    let html = '<div class="batch-row">'
+      + T.LIVELLI.map((l) => `<button class="chip lv-${l.colore} ${batch.livello === l.id ? 'active' : ''}" data-blv="${l.id}"><span class="swatch" style="background:var(--${l.colore})"></span>${esc(l.breve)}</button>`).join('')
+      + '</div>';
+    if (liv) {
+      html += '<div class="batch-row"><select id="batchCat" class="batch-sel"><option value="">— categoria —</option>'
+        + liv.categorie.map((c) => `<option value="${c.id}" ${batch.categoria === c.id ? 'selected' : ''}>${esc(c.nome)}</option>`).join('') + '</select>';
+      const cat = T.getCategoria(batch.livello, batch.categoria);
+      if (cat) html += '<select id="batchVoce" class="batch-sel"><option value="">tutta la categoria</option>'
+        + cat.voci.slice().sort((a, b) => a.nome.localeCompare(b.nome, 'it')).map((v) => `<option value="${esc(v.nome)}" ${batch.voce === v.nome ? 'selected' : ''}>${esc(v.nome)}</option>`).join('') + '</select>';
+      html += '</div>';
+      html += '<div class="batch-row">' + T.IMPORTANZE.map((i) => `<button class="chip imp ${batch.importanza === i.id ? 'active' : ''}" data-bimp="${i.id}">${esc(i.nome)}</button>`).join('') + '</div>';
+    }
+    const ready = batch.livello && batch.categoria;
+    const etich = ready ? (batch.voce || (T.getCategoria(batch.livello, batch.categoria) || {}).nome || '') : '';
+    let status;
+    if (!ready) status = 'Scegli livello e categoria da taggare.';
+    else if ((p.mode || 'con') === 'senza' || !p.testo) status = 'Per l\'analisi rapida serve il testo: passa a «Con testo».';
+    else status = 'Seleziona nel testo per taggare → <b>' + esc(etich) + '</b>';
+    html += `<div class="batch-status"><span>${status}</span><span class="batch-count">${batch.count} taggate</span><button class="btn ghost sm" id="btnBatchExit">Esci</button></div>`;
+    bar.innerHTML = html;
+
+    $$('#batchBar [data-blv]').forEach((b) => b.onclick = () => { batch.livello = b.dataset.blv; batch.categoria = ''; batch.voce = ''; renderBatchBar(); });
+    const bc = $('#batchCat'); if (bc) bc.onchange = () => { batch.categoria = bc.value; batch.voce = ''; renderBatchBar(); };
+    const bv = $('#batchVoce'); if (bv) bv.onchange = () => { batch.voce = bv.value; renderBatchBar(); };
+    $$('#batchBar [data-bimp]').forEach((b) => b.onclick = () => { batch.importanza = b.dataset.bimp; renderBatchBar(); });
+    $('#btnBatchExit').onclick = () => { batch.on = false; renderBatchBar(); renderTextPanel(currentPasso()); };
+  }
+  function toggleBatch() {
+    batch.on = !batch.on;
+    if (batch.on) batch.count = 0;
+    renderBatchBar(); renderTextPanel(currentPasso());
   }
 
   function renderTextPanel(p) {
@@ -171,7 +228,7 @@
     const starts = []; let acc = 0;
     lines.forEach((ln) => { starts.push(acc); acc += ln.length + 1; });
     const spanAnns = (p.annotazioni || []).filter((a) => a.refType === 'span' && a.span);
-    const cls = p.genere === 'poesia' ? 'poesia' : '';
+    const cls = (p.genere === 'poesia' ? 'poesia' : '') + (batch.on ? ' batch-on' : '');
     const html = lines.map((ln, i) => {
       const lineStart = starts[i];
       const lineEnd = lineStart + ln.length;
@@ -218,6 +275,25 @@
     const start = Math.min(a, b), end = Math.max(a, b);
     if (end - start < 1) { hideSelHint(); return; }
     const p = currentPasso();
+    // ── Analisi rapida (batch): la selezione crea subito l'annotazione ──
+    if (batch.on && batch.livello && batch.categoria) {
+      const ann = {
+        id: uid(), livello: batch.livello, categoria: batch.categoria, voce: batch.voce || '',
+        importanza: batch.importanza, refType: 'span', span: { start, end },
+        quote: p.testo.slice(start, end), refManuale: '', tags: [], commento: '',
+        rimando: { passoId: '', libero: '' },
+        ipertesto: { ambito: '', pratica: '', visibilita: '', postura: '', modo: '' },
+        creato: now(), modificato: now(),
+      };
+      if (!p.annotazioni) p.annotazioni = [];
+      p.annotazioni.push(ann); p.modificato = now(); save();
+      batch.count++;
+      window.getSelection().removeAllRanges();
+      renderTextPanel(p); renderNotes(p); renderBatchBar();
+      const etich = batch.voce || (T.getCategoria(batch.livello, batch.categoria) || {}).nome || '';
+      toast('Annotato: ' + etich + ' (' + batch.count + ')');
+      return;
+    }
     pendingSel = { start, end, quote: p.testo.slice(start, end) };
     const hint = $('#selHint');
     const q = pendingSel.quote.replace(/\s+/g, ' ').trim();
@@ -380,11 +456,16 @@
       id: uid(), livello: '', categoria: '', voce: '', importanza: 'rilevante',
       refType: sel ? 'span' : 'manuale',
       span: sel ? { start: sel.start, end: sel.end } : null,
-      quote: sel ? sel.quote : '', refManuale: '', tags: [], commento: '',
+      quote: sel ? sel.quote : '', refManuale: '', refPrefix: '', refLocus: '', tags: [], commento: '',
       rimando: { passoId: '', libero: '' },
       ipertesto: { ambito: '', pratica: '', visibilita: '', postura: '', modo: '' },
     };
     if (!formState.ipertesto) formState.ipertesto = { ambito: '', pratica: '', visibilita: '', postura: '', modo: '' };
+    // costruttore rapido del riferimento: precarica dal refManuale esistente
+    if (formState.refType !== 'span' && formState.refLocus === undefined) {
+      formState.refLocus = formState.refManuale || ''; formState.refPrefix = '';
+    }
+    if (formState.refPrefix === undefined) formState.refPrefix = '';
     if (sel) { formState.refType = 'span'; formState.span = { start: sel.start, end: sel.end }; formState.quote = sel.quote; }
     $('#modalTitle').textContent = existing ? 'Modifica annotazione' : 'Nuova annotazione';
     $('#btnDelete').style.display = existing ? '' : 'none';
@@ -400,72 +481,82 @@
     const fs = formState;
     const p = currentPasso();
     const body = $('#modalBody');
+    const liv = T.getLivello(fs.livello);
 
-    // Riferimento
+    // ── 1. Riferimento nel testo ──────────────────────────────
     let refHtml = '<div class="field"><label>Riferimento nel testo</label>';
     if (fs.refType === 'span' && fs.quote) {
       const q = fs.quote.replace(/\s+/g, ' ').trim();
       refHtml += `<div class="nc-quote" style="margin:0 0 8px">${esc(q.length > 160 ? q.slice(0, 160) + '…' : q)}</div>`;
-      refHtml += `<input type="text" id="fRefMan" placeholder="Precisazione (es. v. 3, r. 12) — facoltativa" value="${esc(fs.refManuale)}">`;
+      refHtml += `<input type="text" id="fRefMan" placeholder="Precisazione (es. v. 3) — facoltativa" value="${esc(fs.refManuale)}">`;
     } else {
-      refHtml += `<input type="text" id="fRefMan" placeholder="es. vv. 1-4 · rr. 10-12 · p. 23 · «citazione»" value="${esc(fs.refManuale)}">`;
-      refHtml += '<p class="hint">Modalità senza testo: indica a mano il luogo (versi, righi, pagina).</p>';
+      // costruttore rapido: pulsanti del tipo + campo del luogo
+      refHtml += '<div class="ref-chips">'
+        + REF_PREFIXES.map((px) => `<button type="button" class="ref-chip ${fs.refPrefix === px.v ? 'on' : ''}" data-px="${px.v}">${esc(px.label)}</button>`).join('')
+        + '</div>';
+      refHtml += `<input type="text" id="fRefLocus" placeholder="${fs.refPrefix === '«»' ? 'scrivi la citazione' : 'numero o intervallo, es. 1-4'}" value="${esc(fs.refLocus || '')}">`;
+      const preview = composeRef(fs.refPrefix, fs.refLocus);
+      refHtml += `<p class="hint">${preview ? 'Riferimento: <b>' + esc(preview) + '</b>' : 'Scegli un tipo e scrivi il luogo (oppure lascia vuoto).'}</p>`;
     }
     refHtml += '</div>';
 
-    // Livello — la card mostra la domanda-guida, non la definizione tecnica
-    let lvHtml = '<div class="field"><label>Che cosa vuoi osservare?</label><div class="livello-picker">'
-      + T.LIVELLI.map((l) =>
-        `<div class="lv-opt ${fs.livello === l.id ? 'sel' : ''}" data-lv="${l.id}" style="--c:var(--${l.colore});--cbg:var(--${l.colore}-bg)">
-           <span class="lo-name">${esc(l.nome)}</span><span class="lo-desc">${esc(l.domanda || l.descr)}</span></div>`
-      ).join('') + '</div></div>';
+    // ── 2. Che cosa vuoi osservare? ───────────────────────────
+    // Nessun livello scelto → mostra solo le 4 scelte e fermati qui.
+    if (!liv) {
+      body.innerHTML = refHtml
+        + '<div class="field"><label>Che cosa vuoi osservare?</label><div class="livello-picker">'
+        + T.LIVELLI.map((l) =>
+          `<div class="lv-opt" data-lv="${l.id}" style="--c:var(--${l.colore});--cbg:var(--${l.colore}-bg)">
+             <span class="lo-name">${esc(l.nome)}</span><span class="lo-desc">${esc(l.domanda || l.descr)}</span></div>`).join('')
+        + '</div></div>';
+      bindModalEvents();
+      return;
+    }
 
-    const liv = T.getLivello(fs.livello);
+    // Livello scelto → barra compatta (le altre 3 scompaiono) + espansione
+    const selHtml = `<div class="field"><label>Che cosa vuoi osservare?</label>
+        <div class="lv-selected" style="--c:var(--${liv.colore})">
+          <span class="lv-sel-name">${esc(liv.nome)}</span>
+          <button type="button" class="lv-change" id="btnChangeLv">↺ cambia</button>
+        </div></div>`;
 
-    // Guida didattica: quando un livello è scelto, spiega in parole semplici cosa fare
-    let guidaHtml = '';
-    if (liv) guidaHtml = `<div class="guida-livello" style="border-left-color:var(--${liv.colore})">
+    const guidaHtml = `<div class="guida-livello" style="border-left-color:var(--${liv.colore})">
         <div class="gl-domanda" style="color:var(--${liv.colore})">${esc(liv.domanda || '')}</div>
         ${liv.intento ? `<p class="gl-intento">${esc(liv.intento)}</p>` : ''}
         ${liv.esempio ? `<p class="gl-es">${esc(liv.esempio)}</p>` : ''}
         ${liv.checklist && liv.checklist.length ? `<div class="gl-check"><span class="glc-label">In questo livello cerca</span><ul>${liv.checklist.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
       </div>`;
 
-    // Categoria + voce
-    let catHtml = '<div class="field-row">';
-    catHtml += '<div class="field"><label>Categoria</label><select id="fCat"' + (liv ? '' : ' disabled') + '>';
-    catHtml += '<option value="">' + (liv ? '— scegli —' : 'scegli prima il livello') + '</option>';
-    if (liv) liv.categorie.forEach((c) => { catHtml += `<option value="${c.id}" ${fs.categoria === c.id ? 'selected' : ''}>${esc(c.nome)}</option>`; });
-    catHtml += '</select></div>';
+    // Menù unico categoria+voce: gruppi per categoria, alfabetico interno,
+    // micro-descrizione sotto ogni voce.
+    const groupsHtml = liv.categorie.map((c) => {
+      const voci = c.voci.slice().sort((a, b) => a.nome.localeCompare(b.nome, 'it'));
+      return `<div class="combo-group"><div class="combo-group-label">${esc(c.nome)}</div>`
+        + voci.map((v) => `<button type="button" class="combo-item ${fs.voce === v.nome ? 'on' : ''}" data-cat="${c.id}" data-voce="${esc(v.nome)}">
+            <span class="ci-name">${esc(v.nome)}</span><span class="ci-def">${esc(v.def)}</span></button>`).join('')
+        + '</div>';
+    }).join('');
+    const catObj = T.getCategoria(fs.livello, fs.categoria);
+    const voceKnown = catObj && catObj.voci.some((v) => v.nome === fs.voce);
+    const freeVal = (fs.voce && !voceKnown) ? fs.voce : '';
+    const comboHtml = `<div class="field"><label>Figura / voce</label>
+        <div class="combo" id="voceCombo">
+          <button type="button" class="combo-btn ${fs.voce ? 'has' : ''}" id="comboBtn"><span>${esc(fs.voce || '— scegli la figura o la voce —')}</span><span class="combo-caret">▾</span></button>
+          <div class="combo-panel" id="comboPanel" hidden>
+            <input type="text" class="combo-search" id="comboSearch" placeholder="filtra per nome o descrizione…">
+            <div class="combo-list">${groupsHtml}</div>
+          </div>
+        </div>
+        <input type="text" id="fVoceLibera" class="combo-free" placeholder="oppure scrivi una voce non in elenco" value="${esc(freeVal)}">
+      </div>`;
 
-    const cat = T.getCategoria(fs.livello, fs.categoria);
-    catHtml += '<div class="field"><label>Voce / figura</label><select id="fVoce"' + (cat ? '' : ' disabled') + '>';
-    catHtml += '<option value="">' + (cat ? '— facoltativo —' : '—') + '</option>';
-    let known = false;
-    if (cat) cat.voci.forEach((v) => {
-      const sel = fs.voce === v.nome; if (sel) known = true;
-      const tip = v.def + (v.es ? ' — es.: ' + v.es : '');
-      catHtml += `<option value="${esc(v.nome)}" title="${esc(tip)}" ${sel ? 'selected' : ''}>${esc(v.nome)}</option>`;
-    });
-    if (cat) catHtml += `<option value="__altro__" ${fs.voce && !known ? 'selected' : ''}>Altro (specifica)…</option>`;
-    catHtml += '</select></div></div>';
-    // guida dell'insegnante per la categoria scelta (voce personale);
-    // in mancanza, la spiegazione semplice della categoria
-    if (cat) {
+    // guida d'autore della categoria + promemoria della voce
+    let voceExtraHtml = '';
+    if (fs.voce) {
       const guidaCat = T.getGuidaCategoria(fs.livello, fs.categoria);
-      if (guidaCat) catHtml += `<p class="guida-cat" style="--c:var(--${liv ? liv.colore : 'brand'})">${esc(guidaCat)}</p>`;
-      else if (cat.descr) catHtml += `<p class="hint" style="margin:-8px 0 12px">${esc(cat.descr)}</p>`;
-    }
-    // voce libera
-    if (cat && fs.voce && !cat.voci.some((v) => v.nome === fs.voce)) {
-      catHtml += `<div class="field"><input type="text" id="fVoceLibera" placeholder="Specifica la voce" value="${esc(fs.voce)}"></div>`;
-    }
-    // promemoria sfumato: definizione (+ esempio) della figura selezionata
-    if (cat) {
-      const vdef = cat.voci.find((v) => v.nome === fs.voce);
-      if (vdef) catHtml += `<p class="voce-def">${esc(vdef.def)}`
-        + (vdef.es ? ` <span class="voce-es">es.: «${esc(vdef.es)}»</span>` : '')
-        + '</p>';
+      if (guidaCat) voceExtraHtml += `<p class="guida-cat" style="--c:var(--${liv.colore})">${esc(guidaCat)}</p>`;
+      const vdef = catObj ? catObj.voci.find((v) => v.nome === fs.voce) : null;
+      if (vdef) voceExtraHtml += `<p class="voce-def">${esc(vdef.def)}${vdef.es ? ` <span class="voce-es">es.: «${esc(vdef.es)}»</span>` : ''}</p>`;
     }
 
     // Blocco ipertestuale: ipotesto, ambito, pratica, assi, modo, bussola
@@ -525,15 +616,19 @@
     // Commento
     let comHtml = `<div class="field"><label>Commento</label><textarea id="fCommento" placeholder="Annotazione critica: che cosa noti e perché conta.">${esc(fs.commento)}</textarea></div>`;
 
-    body.innerHTML = refHtml + lvHtml + guidaHtml + catHtml + rimHtml + tagHtml + impHtml + comHtml;
+    body.innerHTML = refHtml + selHtml + guidaHtml + comboHtml + voceExtraHtml + rimHtml + tagHtml + impHtml + comHtml;
     bindModalEvents();
   }
 
   function syncFormFromInputs() {
     const fs = formState; if (!fs) return;
-    const man = $('#fRefMan'); if (man) fs.refManuale = man.value.trim();
+    if (fs.refType === 'span') { const man = $('#fRefMan'); if (man) fs.refManuale = man.value.trim(); }
+    else {
+      const loc = $('#fRefLocus');
+      if (loc) { fs.refLocus = loc.value.trim(); fs.refManuale = composeRef(fs.refPrefix, fs.refLocus); }
+    }
     const com = $('#fCommento'); if (com) fs.commento = com.value;
-    const vl = $('#fVoceLibera'); if (vl) fs.voce = vl.value.trim();
+    const vl = $('#fVoceLibera'); if (vl && vl.value.trim()) fs.voce = vl.value.trim();
     if (fs.livello === 'ipertesto') {
       const rp = $('#fRimPasso'); const rl = $('#fRimLibero');
       fs.rimando = { passoId: rp ? rp.value : '', libero: rl ? rl.value.trim() : '' };
@@ -542,20 +637,42 @@
 
   function bindModalEvents() {
     const fs = formState;
+    // riferimento rapido: pulsanti del tipo
+    $$('#modalBody .ref-chip').forEach((b) => b.onclick = () => {
+      syncFormFromInputs();
+      fs.refPrefix = fs.refPrefix === b.dataset.px ? '' : b.dataset.px;
+      renderModalBody(); const loc = $('#fRefLocus'); if (loc) loc.focus();
+    });
+    // scelta del livello (presente solo quando nessun livello è scelto)
     $$('#modalBody .lv-opt').forEach((o) => o.onclick = () => {
       syncFormFromInputs();
       fs.livello = o.dataset.lv; fs.categoria = ''; fs.voce = ''; renderModalBody();
     });
-    const catSel = $('#fCat');
-    if (catSel) catSel.onchange = () => { syncFormFromInputs(); fs.categoria = catSel.value; fs.voce = ''; renderModalBody(); };
-    const voceSel = $('#fVoce');
-    if (voceSel) voceSel.onchange = () => {
-      syncFormFromInputs();
-      fs.voce = voceSel.value === '__altro__' ? ' ' : voceSel.value; renderModalBody();
-      const vl = $('#fVoceLibera'); if (vl) vl.focus();
-    };
+    const change = $('#btnChangeLv');
+    if (change) change.onclick = () => { syncFormFromInputs(); fs.livello = ''; fs.categoria = ''; fs.voce = ''; renderModalBody(); };
+    // menù unico categoria+voce
+    const comboBtn = $('#comboBtn');
+    if (comboBtn) {
+      const panel = $('#comboPanel');
+      comboBtn.onclick = (e) => { e.stopPropagation(); panel.hidden = !panel.hidden; if (!panel.hidden) { const s = $('#comboSearch'); if (s) s.focus(); } };
+      const search = $('#comboSearch');
+      if (search) search.oninput = () => {
+        const q = search.value.toLowerCase();
+        $$('#modalBody .combo-item').forEach((it) => {
+          const t = (it.dataset.voce + ' ' + (it.querySelector('.ci-def') || {}).textContent).toLowerCase();
+          it.style.display = t.indexOf(q) >= 0 ? '' : 'none';
+        });
+        $$('#modalBody .combo-group').forEach((g) => { g.style.display = $$('.combo-item', g).some((it) => it.style.display !== 'none') ? '' : 'none'; });
+      };
+      $$('#modalBody .combo-item').forEach((it) => it.onclick = () => {
+        syncFormFromInputs(); fs.categoria = it.dataset.cat; fs.voce = it.dataset.voce; renderModalBody();
+      });
+    }
+    // chiudi il menù cliccando fuori
+    body_onmousedown_closeCombo();
+    // importanza
     $$('#modalBody .imp-opt').forEach((o) => o.onclick = () => { fs.importanza = o.dataset.imp; $$('#modalBody .imp-opt').forEach((x) => x.classList.toggle('sel', x === o)); });
-    // tags
+    // tag liberi
     const ti = $('#fTagInput');
     if (ti) {
       ti.onkeydown = (e) => {
@@ -579,6 +696,12 @@
         renderModalBody();
       });
     });
+  }
+  function body_onmousedown_closeCombo() {
+    $('#modalBody').onmousedown = (e) => {
+      const panel = $('#comboPanel');
+      if (panel && !panel.hidden && !e.target.closest('#voceCombo')) panel.hidden = true;
+    };
   }
 
   function saveAnnotation() {
@@ -706,6 +829,7 @@
 
     // workspace
     $('#btnAddNote').onclick = () => openModal(null, pendingSel);
+    $('#btnBatch') && ($('#btnBatch').onclick = toggleBatch);
     $('#btnEditPasso').onclick = () => openPassoModal(currentPasso());
     $('#modeToggle').addEventListener('click', (e) => {
       const b = e.target.closest('button'); if (!b) return;

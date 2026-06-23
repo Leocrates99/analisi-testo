@@ -63,8 +63,12 @@
       <div class="notes-head">
         <div class="nh-row">
           <h2>Annotazioni</h2>
-          <button class="btn primary sm" id="btnAddNote">＋ Annota</button>
+          <div style="display:flex;gap:6px">
+            <button class="btn sm" id="btnBatch" title="Analisi rapida: tagga una categoria su tutto il testo">⚡ Rapida</button>
+            <button class="btn primary sm" id="btnAddNote">＋ Annota</button>
+          </div>
         </div>
+        <div class="batch-bar" id="batchBar"></div>
         <div class="view-toggle" id="viewToggle">
           <button data-view="livello" class="active">Per livello</button>
           <button data-view="importanza">Per importanza</button>
