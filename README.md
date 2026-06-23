@@ -18,7 +18,7 @@ riprende quella di **Poetrify**.
 
 | Livello | Colore | Che cosa raccoglie |
 |---|---|---|
-| **Stilistico-retorica** | indaco | Figure di suono, d'ordine, tropi, figure di pensiero, stile/registro/sintassi, metrica |
+| **Stilistico-retorica** | indaco | Repertorio di ~100 figure in 6 famiglie (suono, sintassi, significato, pensiero, amplificazione, metaplasmi) + stile e metrica. Ogni figura ha definizione + esempio mostrati come promemoria sfumato |
 | **Semantico-lessicale** | verde | Campi e sfere semantiche, temi/motivi, scelta lessicale, sensi e connotazione |
 | **Pragmatico-espressiva** | azzurro | Funzioni linguistiche, enunciazione e deissi, tono/modalità/intenzione, implicito |
 | **Ipertestuale** | seppia | Le 5 relazioni di Genette (intertestualità, ipertestualità, architestualità, paratestualità, metatestualità) + compilazione riflessiva guidata |

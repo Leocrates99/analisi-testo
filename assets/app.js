@@ -350,10 +350,15 @@
       if (pills.length) iperMeta = `<div class="nc-iper">${pills.map((t) => `<span>${t}</span>`).join('')}</div>`;
     }
     const tags = (a.tags || []).length ? `<div class="nc-tags">${a.tags.map((t) => `<span class="nc-tag">${esc(t)}</span>`).join('')}</div>` : '';
+    let voceTip = '';
+    if (a.voce && cat) {
+      const vd = cat.voci.find((v) => v.nome === a.voce);
+      if (vd) voceTip = vd.def + (vd.es ? ' — es.: ' + vd.es : '');
+    }
     return `<div class="note-card lv-${a.livello}" data-id="${a.id}">
       <div class="nc-top">
         ${hideCat ? '' : `<span class="nc-cat">${esc(cat ? cat.nome : '')}</span>`}
-        ${a.voce ? `<span class="nc-voce">${esc(a.voce)}</span>` : ''}
+        ${a.voce ? `<span class="nc-voce"${voceTip ? ` title="${esc(voceTip)}"` : ''}>${esc(a.voce)}</span>` : ''}
         <span class="nc-imp ${impCls}" title="Importanza: ${esc(impNome)}">${esc(impNome)}</span>
       </div>
       ${ref}
@@ -429,7 +434,8 @@
     let known = false;
     if (cat) cat.voci.forEach((v) => {
       const sel = fs.voce === v.nome; if (sel) known = true;
-      catHtml += `<option value="${esc(v.nome)}" title="${esc(v.def)}" ${sel ? 'selected' : ''}>${esc(v.nome)}</option>`;
+      const tip = v.def + (v.es ? ' — es.: ' + v.es : '');
+      catHtml += `<option value="${esc(v.nome)}" title="${esc(tip)}" ${sel ? 'selected' : ''}>${esc(v.nome)}</option>`;
     });
     if (cat) catHtml += `<option value="__altro__" ${fs.voce && !known ? 'selected' : ''}>Altro (specifica)…</option>`;
     catHtml += '</select></div></div>';
@@ -437,10 +443,12 @@
     if (cat && fs.voce && !cat.voci.some((v) => v.nome === fs.voce)) {
       catHtml += `<div class="field"><input type="text" id="fVoceLibera" placeholder="Specifica la voce" value="${esc(fs.voce)}"></div>`;
     }
-    // definizione voce (tooltip inline)
+    // promemoria sfumato: definizione (+ esempio) della figura selezionata
     if (cat) {
       const vdef = cat.voci.find((v) => v.nome === fs.voce);
-      if (vdef) catHtml += `<p class="hint" style="margin:-8px 0 14px">${esc(vdef.def)}</p>`;
+      if (vdef) catHtml += `<p class="voce-def">${esc(vdef.def)}`
+        + (vdef.es ? ` <span class="voce-es">es.: «${esc(vdef.es)}»</span>` : '')
+        + '</p>';
     }
 
     // Blocco ipertestuale: ipotesto, ambito, pratica, assi, modo, bussola

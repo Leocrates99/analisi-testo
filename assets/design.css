@@ -288,6 +288,10 @@ textarea.text-input:focus { outline: none; border-color: var(--brand); }
 .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--brand); }
 .field textarea { resize: vertical; min-height: 80px; font-family: var(--font-body); line-height: 1.6; }
 .field .hint { font-family: var(--font-ui); font-size: 11.5px; color: var(--sepia); margin-top: 4px; font-style: italic; }
+/* Promemoria sfumato della figura: definizione + esempio */
+.voce-def { font-family: var(--font-body); font-size: 13px; line-height: 1.5; color: var(--sepia); opacity: 0.85; margin: -6px 0 14px; padding: 8px 12px; border-left: 2px solid var(--rule); background: var(--cream); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.voce-es { display: block; margin-top: 3px; font-style: italic; opacity: 0.8; }
+.nc-voce[title] { cursor: help; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 .livello-picker { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
