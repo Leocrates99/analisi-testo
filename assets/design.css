@@ -301,6 +301,12 @@ textarea.text-input:focus { outline: none; border-color: var(--brand); }
 .lv-opt .lo-name { font-family: var(--font-ui); font-size: 13px; font-weight: 700; color: var(--c); }
 .lv-opt .lo-desc { font-size: 11.5px; color: var(--sepia); line-height: 1.35; }
 
+/* Guida didattica del livello (parole semplici, accessibile a un liceale) */
+.guida-livello { background: var(--cream); border-left: 3px solid var(--brand); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 11px 14px; margin: -6px 0 16px; }
+.gl-domanda { font-family: var(--font-ui); font-weight: 700; font-size: 13.5px; line-height: 1.4; margin-bottom: 5px; }
+.gl-intento { font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+.gl-es { font-size: 12.5px; font-style: italic; color: var(--sepia); margin-top: 5px; }
+
 .imp-picker { display: flex; gap: 8px; }
 .imp-opt { flex: 1; text-align: center; padding: 8px; border: 1.5px solid var(--rule); border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-ui); font-size: 12.5px; font-weight: 700; background: var(--paper); color: var(--sepia); transition: all 0.14s var(--ease); }
 .imp-opt:hover { border-color: var(--ink); }

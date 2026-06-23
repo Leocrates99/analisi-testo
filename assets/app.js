@@ -241,7 +241,7 @@
   function renderFilters() {
     const lv = $('#filterLivelli');
     lv.innerHTML = T.LIVELLI.map((l) =>
-      `<button class="chip lv-${l.colore} ${view.filtriLivello.has(l.id) ? 'active' : ''}" data-lv="${l.id}">
+      `<button class="chip lv-${l.colore} ${view.filtriLivello.has(l.id) ? 'active' : ''}" data-lv="${l.id}" title="${esc(l.domanda || l.descr)}">
          <span class="swatch" style="background:var(--${l.colore})"></span>${esc(l.breve)}</button>`
     ).join('');
     const imp = $('#filterImp');
@@ -413,16 +413,25 @@
     }
     refHtml += '</div>';
 
-    // Livello
-    let lvHtml = '<div class="field"><label>Livello di analisi</label><div class="livello-picker">'
+    // Livello — la card mostra la domanda-guida, non la definizione tecnica
+    let lvHtml = '<div class="field"><label>Che cosa vuoi osservare?</label><div class="livello-picker">'
       + T.LIVELLI.map((l) =>
         `<div class="lv-opt ${fs.livello === l.id ? 'sel' : ''}" data-lv="${l.id}" style="--c:var(--${l.colore});--cbg:var(--${l.colore}-bg)">
-           <span class="lo-name">${esc(l.nome)}</span><span class="lo-desc">${esc(l.descr)}</span></div>`
+           <span class="lo-name">${esc(l.nome)}</span><span class="lo-desc">${esc(l.domanda || l.descr)}</span></div>`
       ).join('') + '</div></div>';
+
+    const liv = T.getLivello(fs.livello);
+
+    // Guida didattica: quando un livello è scelto, spiega in parole semplici cosa fare
+    let guidaHtml = '';
+    if (liv) guidaHtml = `<div class="guida-livello" style="border-left-color:var(--${liv.colore})">
+        <div class="gl-domanda" style="color:var(--${liv.colore})">${esc(liv.domanda || '')}</div>
+        ${liv.intento ? `<p class="gl-intento">${esc(liv.intento)}</p>` : ''}
+        ${liv.esempio ? `<p class="gl-es">${esc(liv.esempio)}</p>` : ''}
+      </div>`;
 
     // Categoria + voce
     let catHtml = '<div class="field-row">';
-    const liv = T.getLivello(fs.livello);
     catHtml += '<div class="field"><label>Categoria</label><select id="fCat"' + (liv ? '' : ' disabled') + '>';
     catHtml += '<option value="">' + (liv ? '— scegli —' : 'scegli prima il livello') + '</option>';
     if (liv) liv.categorie.forEach((c) => { catHtml += `<option value="${c.id}" ${fs.categoria === c.id ? 'selected' : ''}>${esc(c.nome)}</option>`; });
@@ -439,6 +448,8 @@
     });
     if (cat) catHtml += `<option value="__altro__" ${fs.voce && !known ? 'selected' : ''}>Altro (specifica)…</option>`;
     catHtml += '</select></div></div>';
+    // spiegazione semplice della categoria scelta
+    if (cat && cat.descr) catHtml += `<p class="hint" style="margin:-8px 0 12px">${esc(cat.descr)}</p>`;
     // voce libera
     if (cat && fs.voce && !cat.voci.some((v) => v.nome === fs.voce)) {
       catHtml += `<div class="field"><input type="text" id="fVoceLibera" placeholder="Specifica la voce" value="${esc(fs.voce)}"></div>`;
@@ -508,7 +519,7 @@
     // Commento
     let comHtml = `<div class="field"><label>Commento</label><textarea id="fCommento" placeholder="Annotazione critica: che cosa noti e perché conta.">${esc(fs.commento)}</textarea></div>`;
 
-    body.innerHTML = refHtml + lvHtml + catHtml + rimHtml + tagHtml + impHtml + comHtml;
+    body.innerHTML = refHtml + lvHtml + guidaHtml + catHtml + rimHtml + tagHtml + impHtml + comHtml;
     bindModalEvents();
   }
 

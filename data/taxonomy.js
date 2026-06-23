@@ -47,10 +47,13 @@
       breve: 'Stile e figure',
       colore: 'retorica',
       descr: 'Come è costruito il testo: figure retoriche, stile, sintassi, ritmo e metrica.',
+      intento: 'Qui guardi COME è fatto il testo — i suoni, l\'ordine delle parole, le figure — prima ancora del significato. È il livello della forma.',
+      domanda: 'Come suona e com\'è costruito? Quali parole sono messe in rilievo?',
+      esempio: 'Es.: la ripetizione del suono «r» rende aspro il verso.',
       categorie: [
         {
           id: 'suono', nome: 'Figure di suono (fonetiche)',
-          descr: 'Lavorano sul suono e sul significante: ritmo, musicalità, effetti acustici.',
+          descr: 'Giocano con i suoni delle parole: ripetizioni, musicalità, effetti acustici.',
           voci: [
             { nome: 'Allitterazione', def: 'Ripetizione dello stesso suono a inizio o interno di parole vicine.', es: "E mi mess'in la mia mente il mio maestro (Dante)" },
             { nome: 'Assonanza', def: "Uguaglianza delle sole vocali dall'ultima tonica in poi.", es: 'fame / face' },
@@ -97,7 +100,7 @@
         },
         {
           id: 'significato', nome: 'Figure di significato (tropi)',
-          descr: 'Operano sul contenuto: trasferiscono il senso per legami logici, analogici o quantitativi.',
+          descr: 'Spostano il senso di una parola verso un\'altra: immagini, paragoni, sostituzioni.',
           voci: [
             { nome: 'Analogia', def: "Metafora condensata che collega d'intuito realtà lontanissime, senza passaggi logici.", es: 'Le mani della sera (Montale)' },
             { nome: 'Antifrasi', def: 'Si dice il contrario di ciò che si intende, affidando il senso al tono o al contesto.', es: 'Che bella giornata! (sotto un nubifragio)' },
@@ -120,7 +123,7 @@
         },
         {
           id: 'pensiero', nome: 'Figure di pensiero, logica e argomentazione',
-          descr: "Coinvolgono l'andamento del pensiero, l'argomentazione e la postura dell'io lirico.",
+          descr: 'Riguardano il modo di ragionare e di rivolgersi al lettore: domande, esclamazioni, ironia.',
           voci: [
             { nome: 'Adynaton', def: 'Evento impossibile usato come paragone per negare assolutamente un fatto.', es: 'Si vedranno i pesci volare prima che io ti dimentichi' },
             { nome: 'Allegoria', def: "Sistema concettuale prolungato dietro il velo letterale di immagini; richiede decodifica.", es: "la Divina Commedia come viaggio dell'anima" },
@@ -164,7 +167,7 @@
         },
         {
           id: 'metaplasmi', nome: 'Metaplasmi e mutazioni morfologiche',
-          descr: 'Alterano la forma fonetica o morfologica della singola parola (spesso per metrica).',
+          descr: 'Modificano la forma della singola parola (lettere o sillabe in più o in meno), spesso per la metrica.',
           voci: [
             { nome: 'Aferesi', def: 'Caduta di vocale o sillaba a inizio parola.', es: "'vangelio per evangelo" },
             { nome: 'Antanaclasi', def: 'Stessa parola ripetuta con significato ogni volta diverso.', es: 'la morte del cuore' },
@@ -181,7 +184,7 @@
         },
         {
           id: 'stile', nome: 'Stile, registro, sintassi',
-          descr: "Tratti generali dell'elocuzione.",
+          descr: 'Il tono generale e il modo di costruire le frasi (registro alto o basso, frasi semplici o complesse).',
           voci: [
             { nome: 'Registro alto / sublime', def: 'Lessico e sintassi solenni, elevati.' },
             { nome: 'Registro medio', def: 'Tono piano, equilibrato.' },
@@ -215,6 +218,9 @@
       breve: 'Lessico e sensi',
       colore: 'semantica',
       descr: 'Le scelte di parola e i loro significati: temi, campi semantici, connotazioni.',
+      intento: 'Qui studi LE PAROLE e i loro significati: quali immagini evocano, quali temi tornano, quali sfumature nascondono.',
+      domanda: 'Quali sono le parole-chiave? A quali idee e sfere di significato rimandano?',
+      esempio: 'Es.: il lessico della luce attraversa tutta la poesia.',
       categorie: [
         {
           id: 'campo', nome: 'Campo / sfera semantica',
@@ -243,7 +249,7 @@
         },
         {
           id: 'scelta', nome: 'Scelta lessicale',
-          descr: 'Marche e provenienza delle parole.',
+          descr: 'Da dove vengono le parole e che impronta hanno (arcaismi, tecnicismi, parole-chiave).',
           voci: [
             { nome: 'Parola-chiave', def: 'Termine portante del senso del passo.' },
             { nome: 'Latinismo', def: 'Termine o costrutto di derivazione latina.' },
@@ -257,7 +263,7 @@
         },
         {
           id: 'senso', nome: 'Sensi e connotazione',
-          descr: 'Stratificazione e sfumature di significato.',
+          descr: 'Le sfumature, i doppi sensi e i sottintesi affettivi delle parole.',
           voci: [
             { nome: 'Polisemia / ambiguità', def: 'Compresenza di più significati.' },
             { nome: 'Connotazione', def: 'Significato affettivo o evocativo oltre il denotativo.' },
@@ -277,10 +283,13 @@
       breve: 'Comunicazione',
       colore: 'pragmatica',
       descr: 'Il testo come atto comunicativo: chi parla, a chi, con quale funzione e intenzione.',
+      intento: 'Qui leggi il testo come un atto di comunicazione: chi parla, a chi si rivolge, con quale tono e con quale scopo.',
+      domanda: 'Chi parla e a chi? Con che tono, e per ottenere che cosa?',
+      esempio: 'Es.: il poeta si rivolge alla patria con tono accorato (apostrofe).',
       categorie: [
         {
           id: 'funzioni', nome: 'Funzioni linguistiche',
-          descr: 'Funzioni della comunicazione (modello di Jakobson).',
+          descr: 'A che cosa "serve" il messaggio: le sei funzioni della comunicazione (Jakobson).',
           voci: [
             { nome: 'Funzione emotiva / espressiva', def: "Centrata sull'emittente e i suoi affetti." },
             { nome: 'Funzione conativa', def: 'Centrata sul destinatario (ordini, appelli).' },
@@ -292,7 +301,7 @@
         },
         {
           id: 'enunciazione', nome: 'Enunciazione e deissi',
-          descr: 'Tracce dell\'atto del dire nel testo.',
+          descr: 'Le tracce di chi parla, a chi, dove e quando (io/tu, qui/ora).',
           voci: [
             { nome: 'Deissi personale (io/tu)', def: 'Marche di persona che ancorano emittente e destinatario.' },
             { nome: 'Deissi spaziale (qui/là)', def: 'Marche di luogo relative alla scena enunciativa.' },
@@ -338,6 +347,9 @@
       breve: 'Rimandi e confronti',
       colore: 'ipertesto',
       descr: 'Come il passo dialoga con altri testi: citazione, derivazione, genere, cornice, commento.',
+      intento: 'Qui metti il testo in dialogo con ALTRI testi: la stessa opera, lo stesso autore, altri autori, la tradizione.',
+      domanda: 'Questo passo ti ricorda altri testi? Da dove viene, chi cita, chi lo riprenderà?',
+      esempio: 'Es.: riprende un\'immagine di Saffo, rovesciandone il senso.',
       categorie: [
         {
           id: 'intertesto', nome: 'Intertestualità (citazione, allusione)',
