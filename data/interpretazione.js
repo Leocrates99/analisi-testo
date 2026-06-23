@@ -21,6 +21,7 @@
       id: 'identikit', n: 1, icona: '📋',
       nome: 'Identikit e costituzione del testo',
       sotto: 'Livello 0',
+      intro: 'Prima di leggere, colloca: chi scrive, quando, in che forma. Sono le coordinate che impediscono di smarrirsi nel testo.',
       fonti: [],
       campi: [
         { id: 'autoreOpera', type: 'text', label: 'Autore, opera, luogo', auto: 'meta', prompt: 'Autore, titolo, libro/carme/canto, versi o paragrafi.' },
@@ -32,6 +33,7 @@
     {
       id: 'letterale', n: 2, icona: '✍️',
       nome: 'Decodifica letterale e architettura sintattica',
+      intro: 'Assicurati di aver capito alla lettera, prima di interpretare: sciogli i nodi della sintassi e di\' in prosa piana ciò che il verso dice per vie traverse.',
       fonti: ['semantica'],
       campi: [
         { id: 'parafrasi', type: 'text', big: true, label: "Parafrasi / traduzione d'autore", prompt: "Ripristina l'ordine logico Soggetto-Verbo-Oggetto; sciogli le metafore solo a livello letterale." },
@@ -50,6 +52,7 @@
     {
       id: 'formale', n: 3, icona: '🎧',
       nome: 'Involucro formale: metrica, fonica e ritmo',
+      intro: 'Ascolta l\'involucro — metro, suono, ritmo. È la cassa armonica in cui il significato risuona, e spesso lo tradisce prima ancora delle parole.',
       fonti: ['retorica:metrica', 'retorica:suono', 'retorica:sintassi'],
       campi: [
         { id: 'metrica', type: 'text', label: 'Struttura metrica', prompt: 'Es. esametri dattilici, endecasillabi sciolti, strofa saffica.' },
@@ -69,6 +72,7 @@
     {
       id: 'retorico', n: 4, icona: '🎭',
       nome: 'Smontaggio retorico e rete intertestuale',
+      intro: 'Smonta i meccanismi e segui i fili che legano il passo ad altri testi: qui la forma confessa la sua intenzione.',
       fonti: ['retorica:significato', 'retorica:pensiero', 'ipertesto'],
       campi: [
         { id: 'posizione', type: 'text', label: 'Figure di posizione', prompt: 'Chiasmi, parallelismi, climax: individua le simmetrie geometriche del testo.' },
@@ -99,6 +103,7 @@
     {
       id: 'ermeneutica', n: 5, icona: '🧠',
       nome: 'Ermeneutica, antropologia e sintesi critica',
+      intro: 'Tira le fila, dai dati raccolti alla tesi: dimostra che quella forma era l\'unica veste possibile per quel contenuto.',
       fonti: ['semantica:tema', 'semantica:campo', 'pragmatica', 'ipertesto'],
       campi: [
         { id: 'paroleChiave', type: 'tags', max: 3, label: 'Le 3 parole-chiave concettuali', prompt: 'I tre concetti portanti del passo. Premi Invio.' },

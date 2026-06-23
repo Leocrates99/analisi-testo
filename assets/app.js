@@ -428,6 +428,7 @@
         <div class="gl-domanda" style="color:var(--${liv.colore})">${esc(liv.domanda || '')}</div>
         ${liv.intento ? `<p class="gl-intento">${esc(liv.intento)}</p>` : ''}
         ${liv.esempio ? `<p class="gl-es">${esc(liv.esempio)}</p>` : ''}
+        ${liv.checklist && liv.checklist.length ? `<div class="gl-check"><span class="glc-label">In questo livello cerca</span><ul>${liv.checklist.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
       </div>`;
 
     // Categoria + voce

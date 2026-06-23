@@ -50,6 +50,12 @@
       intento: 'Prima del significato viene la fattura: i suoni, l\'ordine delle parole, le figure. Comincia da qui, perché nella grande pagina la forma è già il contenuto che prende corpo.',
       domanda: 'Come suona e com\'è costruito? Quali parole sono messe in rilievo?',
       esempio: 'Es.: la ripetizione del suono «r» rende aspro il verso.',
+      checklist: [
+        'i suoni che tornano o stridono',
+        'le parole spostate o messe in rilievo',
+        'le figure che spostano il senso (metafore, similitudini)',
+        'metro, pause e inarcature del verso',
+      ],
       categorie: [
         {
           id: 'suono', nome: 'Figure di suono (fonetiche)',
@@ -221,6 +227,12 @@
       intento: 'Pesa le parole una a una: ciascuna porta con sé un\'immagine, un campo, una memoria. Segui i fili che le legano e vedrai affiorare i temi.',
       domanda: 'Quali sono le parole-chiave? A quali idee e sfere di significato rimandano?',
       esempio: 'Es.: il lessico della luce attraversa tutta la poesia.',
+      checklist: [
+        'le parole-chiave che reggono il senso',
+        'i campi e le sfere semantiche dominanti',
+        'i termini marcati (arcaismi, tecnicismi, grecismi)',
+        'le connotazioni e i doppi sensi',
+      ],
       categorie: [
         {
           id: 'campo', nome: 'Campo / sfera semantica',
@@ -286,6 +298,12 @@
       intento: 'Un testo non si limita a descrivere; parla a qualcuno, e per una ragione. Chiediti chi tiene la voce e a chi la porge, perché lì si annida metà del senso.',
       domanda: 'Chi parla e a chi? Con che tono, e per ottenere che cosa?',
       esempio: 'Es.: il poeta si rivolge alla patria con tono accorato (apostrofe).',
+      checklist: [
+        'chi parla e a chi si rivolge (io / tu)',
+        'il tono e l\'atteggiamento della voce',
+        'la funzione che prevale (esprimere, esortare, informare)',
+        'ciò che è sottinteso o taciuto',
+      ],
       categorie: [
         {
           id: 'funzioni', nome: 'Funzioni linguistiche',
@@ -350,6 +368,12 @@
       intento: 'Nessuna pagina nasce dal nulla; ognuna ne porta dentro altre. Cerca le voci che vi risuonano — la stessa opera, lo stesso autore, i modelli antichi — e osserva come il poeta le piega al suo disegno.',
       domanda: 'Questo passo ti ricorda altri testi? Da dove viene, chi cita, chi lo riprenderà?',
       esempio: 'Es.: riprende un\'immagine di Saffo, rovesciandone il senso.',
+      checklist: [
+        'citazioni e allusioni ad altri testi',
+        'il modello o la fonte da cui deriva',
+        'il rapporto con le regole del genere',
+        'la strategia di ripresa (imitazione, variazione, rovesciamento)',
+      ],
       categorie: [
         {
           id: 'intertesto', nome: 'Intertestualità (citazione, allusione)',
@@ -526,7 +550,7 @@
     getPratica: getPratica,
     getGuidaCategoria: getGuidaCategoria,
     letturaRapporto: letturaRapporto,
-    versione: '1.2',
+    versione: '1.3',
   };
 
 })(typeof window !== 'undefined' ? window : this);

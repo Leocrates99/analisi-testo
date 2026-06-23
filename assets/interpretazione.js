@@ -129,7 +129,7 @@
       const materiali = mat.length ? `<details class="materiali"><summary>Materiali raccolti — ${mat.length}</summary><div class="mat-list">${mat.map((a) => matCardHTML(a)).join('')}</div></details>` : '';
       return `<section class="fase isez" data-sez="${sez.id}">
         <div class="fase-head"><span class="fase-n">${sez.icona || sez.n}</span>
-          <div><h2>${esc(sez.nome)}</h2>${sez.sotto ? `<p class="fase-ob">${esc(sez.sotto)}</p>` : ''}</div></div>
+          <div><h2>${esc(sez.nome)}${sez.sotto ? ` <span class="sez-tag">${esc(sez.sotto)}</span>` : ''}</h2>${sez.intro ? `<p class="fase-ob">${esc(sez.intro)}</p>` : ''}</div></div>
         ${campi}
         ${materiali}
       </section>`;

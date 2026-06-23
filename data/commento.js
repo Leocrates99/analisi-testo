@@ -20,7 +20,7 @@
     fasi: [
       {
         id: 'inquadramento', n: 1, nome: 'Inquadramento e contesto',
-        obiettivo: 'Stabilire le coordinate prima di toccare il testo.',
+        obiettivo: 'Prima di toccare il testo, fissa le coordinate: chi scrive, quando, in quale forma. Senza, ogni osservazione resta campata in aria.',
         errore: "Sostituire l'analisi con una scheda biografica.",
         fonti: [],
         campi: [
@@ -31,7 +31,7 @@
       },
       {
         id: 'letterale', n: 2, nome: 'Livello letterale: parafrasi',
-        obiettivo: 'Che cosa dice il testo. Il livello zero, da non saltare.',
+        obiettivo: 'Di\' anzitutto che cosa dice il testo, alla lettera. È il livello zero, e chi lo salta costruisce sulla sabbia.',
         errore: 'Fermarsi al riassunto.',
         fonti: ['semantica:tema'],
         campi: [
@@ -41,7 +41,7 @@
       },
       {
         id: 'formale', n: 3, nome: 'Livello formale e stilistico',
-        obiettivo: 'Come lo dice: metro, suono, lessico, sintassi.',
+        obiettivo: 'Ora guarda come lo dice — il metro, i suoni, le parole, l\'ordine della frase. La forma non accompagna il senso, lo fabbrica.',
         errore: 'Trattare la metrica come un guscio vuoto.',
         fonti: ['retorica:metrica', 'retorica:suono', 'retorica:stile', 'retorica:sintassi', 'retorica:metaplasmi', 'semantica:scelta'],
         campi: [
@@ -52,7 +52,7 @@
       },
       {
         id: 'retorico', n: 4, nome: 'Livello retorico e semantico',
-        obiettivo: 'I meccanismi del significato.',
+        obiettivo: 'Apri i meccanismi del significato: ogni figura è una scelta, e ogni scelta produce un effetto preciso sul lettore.',
         errore: 'Fare l\'"elenco della spesa" di figure senza spiegarle.',
         fonti: ['retorica:significato', 'retorica:pensiero', 'retorica:amplificazione', 'semantica:senso'],
         campi: [
@@ -61,7 +61,7 @@
       },
       {
         id: 'interpretazione', n: 5, nome: 'Interpretazione critica ed ermeneutica',
-        obiettivo: 'Che cosa significa in profondità. Il culmine dell\'analisi.',
+        obiettivo: 'Qui tutto converge, dai dettagli formali alla visione del mondo. È il punto in cui l\'analisi diventa interpretazione.',
         errore: 'Esprimere pareri soggettivi ("mi piace perché…").',
         fonti: ['ipertesto', 'pragmatica', 'semantica:tema', 'semantica:campo'],
         campi: [
@@ -85,7 +85,7 @@
     fasi: [
       {
         id: 'critica', n: 1, nome: 'Critica del testo e tradizione',
-        obiettivo: 'Fissare la pagina: il testo non è un dato immutabile.',
+        obiettivo: 'Fissa prima la pagina: il testo che leggi è frutto di scelte d\'editore, non un dato caduto dal cielo.',
         errore: 'Trattare il testo come dato immutabile.',
         fonti: [],
         campi: [
@@ -95,7 +95,7 @@
       },
       {
         id: 'morfosintassi', n: 2, nome: 'Morfosintassi e lessico',
-        obiettivo: 'Oltre la traduzione: giustificare l\'architettura della lingua.',
+        obiettivo: 'Va\' oltre la traduzione: ogni modo, ogni caso, ogni costrutto è una decisione dell\'autore. Chiediti perché proprio quello.',
         errore: 'Tradurre senza giustificare le scelte linguistiche.',
         fonti: ['semantica', 'retorica:stile', 'retorica:sintassi', 'retorica:metaplasmi'],
         campi: [
@@ -105,7 +105,7 @@
       },
       {
         id: 'metrica', n: 3, nome: 'Metrica e prosodia',
-        obiettivo: 'La musica della lingua: quantità (lunghe/brevi), non solo ritmo.',
+        obiettivo: 'Nelle lingue antiche il verso si misura in sillabe lunghe e brevi, una musica esatta. Ascolta dove rallenta e dove corre, e a quale pathos risponde.',
         errore: 'Ignorare il legame tra metro e pathos.',
         fonti: ['retorica:metrica', 'retorica:suono'],
         campi: [
@@ -115,7 +115,7 @@
       },
       {
         id: 'intertesto', n: 4, nome: 'Intertestualità e allusività',
-        obiettivo: 'Il gioco dei modelli: la letteratura classica vive di riscritture.',
+        obiettivo: 'La letteratura antica vive di riscritture: ogni autore dialoga con chi lo precede. Trova il modello, poi guarda come lo piega al proprio fine.',
         errore: 'Vedere il testo come creazione dal nulla.',
         fonti: ['ipertesto'],
         campi: [
@@ -125,7 +125,7 @@
       },
       {
         id: 'antropologia', n: 5, nome: 'Contesto antropologico e storico',
-        obiettivo: 'L\'orizzonte culturale: evitare l\'anacronismo.',
+        obiettivo: 'Restituisci il testo al suo mondo: le parole degli antichi pesano categorie diverse dalle nostre. Guàrdati dall\'anacronismo, la trappola più comune.',
         errore: 'Anacronismo culturale.',
         fonti: ['pragmatica', 'semantica:campo'],
         campi: [
