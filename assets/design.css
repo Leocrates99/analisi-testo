@@ -44,6 +44,20 @@
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
+/* ── Tema scuro globale (toggle dalla shell) ──────────────── */
+[data-theme="dark"] {
+  --bg: #181620; --paper: #211d2e; --cream: #1c1928;
+  --ink: #e8e4ec; --sepia: #a49cb2;
+  --rule: #3a3550; --rule-soft: #2d2940;
+  --brand: #9b8cff; --brand-dark: #b6abff; --brand-soft: #2a2440;
+  --retorica-bg: #241f3a; --semantica-bg: #16281f; --pragmatica-bg: #152230; --ipertesto-bg: #2a2016;
+  --shadow-card: 0 2px 8px rgba(0,0,0,.35); --shadow-lift: 0 10px 30px rgba(0,0,0,.45); --shadow-pop: 0 8px 28px rgba(0,0,0,.5);
+}
+[data-theme="dark"] .topbar { background: rgba(24,22,32,.92); }
+[data-theme="dark"] .btn.primary { color: #14121c; }
+[data-theme="dark"] .consiglio-box, [data-theme="dark"] .ric-profilo { background: var(--cream); border-color: var(--rule); }
+[data-theme="dark"] .backup-reminder { background: var(--brand-soft); color: var(--ink); }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
@@ -570,6 +584,35 @@ textarea.text-input:focus { outline: none; border-color: var(--brand); }
 .ric-profilo p { font-size: 13.5px; line-height: 1.55; color: var(--ink); margin: 3px 0; }
 .ric-profilo-hint { font-style: italic; color: var(--sepia) !important; font-size: 12.5px !important; }
 .ric-profilo-empty { font-family: var(--font-ui); font-size: 13px; color: var(--sepia); background: var(--cream); border-color: var(--rule-soft); }
+
+/* ============================================================
+   SHELL CONDIVISA — barra fasi + menù export
+   ============================================================ */
+.shell-phasebar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 7px clamp(16px, 4vw, 40px); background: var(--cream); border-bottom: 1px solid var(--rule-soft); position: sticky; top: 58px; z-index: 35; }
+.sp-doc { font-family: var(--font-display); font-size: 14px; color: var(--brand); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.sp-doc i { font-style: normal; color: var(--sepia); margin-right: 4px; }
+.sp-tabs { display: inline-flex; gap: 2px; background: var(--paper); border: 1px solid var(--rule); border-radius: 20px; padding: 2px; }
+.sp-tab { font-family: var(--font-ui); font-size: 12.5px; font-weight: 600; padding: 5px 12px; border-radius: 20px; color: var(--sepia); text-decoration: none; white-space: nowrap; }
+a.sp-tab:hover { color: var(--brand); background: var(--brand-soft); text-decoration: none; }
+.sp-tab.active { background: var(--brand); color: #fff; }
+[data-theme="dark"] .sp-tab.active { color: #14121c; }
+
+.shell-export { position: relative; }
+.shell-export > summary { list-style: none; }
+.shell-export > summary::-webkit-details-marker { display: none; }
+.shell-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 60; display: flex; flex-direction: column; min-width: 214px; background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius-md); box-shadow: var(--shadow-pop); padding: 5px; }
+.shell-menu button { text-align: left; background: none; border: none; color: var(--ink); font-family: var(--font-ui); font-size: 13px; padding: 8px 10px; border-radius: var(--radius-sm); cursor: pointer; }
+.shell-menu button:hover { background: var(--cream); color: var(--brand); }
+.shell-menu hr { border: none; border-top: 1px solid var(--rule-soft); margin: 4px 2px; }
+
+/* ============================================================
+   PANNELLO LATERALE — l'annotazione affianca il testo (non lo copre)
+   ============================================================ */
+.overlay { position: fixed; inset: 0; z-index: 100; display: none; background: transparent; backdrop-filter: none; pointer-events: none; padding: 0; }
+.overlay.open { display: block; }
+.modal { position: absolute; top: 0; right: 0; height: 100dvh; width: min(460px, 100%); max-width: 100%; max-height: 100dvh; overflow-y: auto; background: var(--bg); border: none; border-left: 1px solid var(--rule-soft); border-radius: 0; box-shadow: -12px 0 34px rgba(44, 53, 57, 0.20); pointer-events: auto; }
+.modal-head, .modal-foot { border-radius: 0; }
+@media (max-width: 900px) { .overlay.open { background: rgba(44, 53, 57, 0.45); pointer-events: auto; } }
 
 /* ── Modalità aula (tema scuro da proiezione) ─────────────── */
 body.aula {

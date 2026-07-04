@@ -94,7 +94,9 @@ analisi-testo/
 │   ├─ app.js            ← logica Analisi: stato, evidenziatura, form, filtri, dossier, import/export
 │   ├─ commento.js       ← logica Commento: fasi, materiali, autosalvataggio, export
 │   ├─ interpretazione.js← logica Interpretazione: campi tipizzati, liste, import, export
-│   └─ ricezione.js      ← logica Ricezione: ruota, radar con dispersione, lettori, temi
+│   ├─ ricezione.js      ← logica Ricezione: ruota, radar con dispersione, lettori, temi
+│   ├─ shell.js          ← barra condivisa: cambio-fase col passo, tema, menù Esporta
+│   └─ dossier.js        ← il documento del passo (HTML/PDF · Markdown · copia · JSON)
 ├─ data/
 │   ├─ taxonomy.js       ← i 4 livelli, le categorie e il repertorio di voci
 │   ├─ commento.js       ← il protocollo di commento (moderno + filologico) e il vademecum
@@ -157,7 +159,25 @@ ipertestuali (pratica, postura, modo) raccolti in Fase 1. Barra di avanzamento,
 autosalvataggio ed export Markdown. In testa, il consiglio metodologico
 sull'esposizione lineare.
 
-Le tre fasi condividono lo stesso archivio: **annotare → commentare → interpretare**.
+Le fasi condividono lo stesso archivio: **annotare → commentare → interpretare → auscultare**.
+
+## Shell condivisa (navigazione, tema, documento)
+
+Ogni fase monta una **barra condivisa** ([`assets/shell.js`](assets/shell.js)) che tiene
+insieme l'ecosistema senza fondere le pagine in una SPA:
+
+- **Cambio-fase che porta con sé il passo** — le quattro fasi (Analisi · Commento ·
+  Interpretazione · Ricezione) sono raggiungibili con un clic *sullo stesso passo*, via
+  `?passo=ID`: non si ri-sceglie il testo ad ogni fase.
+- **Tema chiaro/scuro globale** — un `data-theme` su `<html>`, persistito; niente flash
+  all'avvio. (La «modalità aula» della Ricezione segue il tema.)
+- **Menù «Esporta» = gestione del documento** — da qualunque fase produce il **dossier
+  unico** del passo (testo + annotazioni + commento + interpretazione + ricezione) in:
+  *stampa/PDF*, *Markdown* (per il saggio universitario), *copia negli appunti*, *JSON*
+  ([`assets/dossier.js`](assets/dossier.js)).
+
+L'**annotazione** avviene in un **pannello laterale** che affianca il testo invece di un
+modale che lo copre: si evidenzia e si compila con il verso sempre a vista.
 
 ## Deploy
 

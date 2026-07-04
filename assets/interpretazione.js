@@ -43,6 +43,7 @@
     $('#view-workspace').style.display = toWorkspace ? '' : 'none';
     $('#crumbWrap').style.display = toWorkspace ? '' : 'none';
     $('#btnExport').style.display = toWorkspace ? '' : 'none';
+    if (window.AT_SHELL) AT_SHELL.setPasso(toWorkspace ? DB.currentId : null);
     if (toWorkspace) renderWorkspace(); else renderChooser();
   }
 

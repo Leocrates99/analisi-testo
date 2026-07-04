@@ -37,6 +37,7 @@
     $('#view-workspace').style.display = toWork ? '' : 'none';
     $('#crumbWrap').style.display = toWork ? '' : 'none';
     $('#btnAula').style.display = toWork ? '' : 'none';
+    if (window.AT_SHELL) AT_SHELL.setPasso(toWork ? DB.currentId : null);
     if (toWork) renderWorkspace(); else renderChooser();
   }
 
@@ -50,7 +51,7 @@
   }
   // Palette per i due temi (chiaro = design system; aula = rosone scuro)
   function theme() {
-    const aula = document.body.classList.contains('aula');
+    const aula = document.body.classList.contains('aula') || document.documentElement.getAttribute('data-theme') === 'dark';
     return aula
       ? { off: '#262134', ring: '#2f2a3e', spoke: '#2a2538', stroke: '#14121C', center: '#1A1726', centerStroke: '#352F45', centerText: '#6f667e', label: '#9a92a8', mean: '#F4C84A', meanFill: 'rgba(244,200,74,.14)', cur: '#ECE5D5', curFill: 'rgba(236,229,213,.10)', band: 'rgba(244,200,74,.14)' }
       : { off: '#e7e3da', ring: '#d9d4c8', spoke: '#e2ddd2', stroke: '#fcfbf8', center: '#f5f4f0', centerStroke: '#d5d2cb', centerText: '#a8a39b', label: '#6b6660', mean: '#1800AC', meanFill: 'rgba(24,0,172,.10)', cur: '#2c3539', curFill: 'rgba(44,53,57,.06)', band: 'rgba(24,0,172,.12)' };
