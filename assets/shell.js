@@ -32,7 +32,14 @@
 
   /* ── Tema chiaro/scuro globale ────────────────────────────── */
   function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); }
-  function initTheme() { let t = 'light'; try { t = localStorage.getItem(THEME_KEY) || 'light'; } catch (e) {} applyTheme(t); }
+  function initTheme() {
+    // D2: preferenza salvata, altrimenti quella di SISTEMA (prima forzava 'light',
+    // ignorando prefers-color-scheme). Coerente con l'anti-flash inline in <head>.
+    let t = null;
+    try { t = localStorage.getItem(THEME_KEY); } catch (e) {}
+    if (t !== 'dark' && t !== 'light') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    applyTheme(t);
+  }
   function toggleTheme() {
     const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     applyTheme(cur); try { localStorage.setItem(THEME_KEY, cur); } catch (e) {}

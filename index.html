@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Analisi del Testo · Digital Humanities</title>
 <meta name="description" content="Strumento di analisi del testo letterario (poesia e prosa) per il liceo e l'università: stile e retorica, lessico e semantica, pragmatica, ipertestualità.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- D9/D7 · font self-hosted (niente CDN bloccante; GFS Didot per il greco politonico) -->
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
 <link rel="stylesheet" href="assets/design.css">
-<script>try{var t=localStorage.getItem('analisitesto.theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script>(function(){try{var s=localStorage.getItem('analisitesto.theme');var t=(s==='dark'||s==='light')?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <style>
   body { display: flex; flex-direction: column; align-items: center; padding: 0 20px; }
   .site-header { text-align: center; margin-top: clamp(56px, 12vh, 120px); }
@@ -29,6 +28,7 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenuto">Salta al contenuto</a>
 
 <header class="site-header">
   <span class="brand-mark">Analisi del Testo</span>
@@ -37,7 +37,7 @@
 
 <p class="intro">Uno strumento per leggere il testo letterario in profondità — poesia e prosa, liceo e università. Evidenzia, classifica e commenta su quattro livelli di analisi, con il libro a fianco o con il testo davanti.</p>
 
-<main class="hub">
+<main class="hub" id="contenuto" tabindex="-1">
   <a class="hub-card" href="analisi.html">
     <svg class="hub-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
     <span class="hub-card-title">Analisi</span>

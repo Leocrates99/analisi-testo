@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Analisi del Testo · Officina critica</title>
 <meta name="description" content="Strumento di Digital Humanities per l'analisi stratificata del testo letterario: stile e retorica, lessico e semantica, pragmatica, ipertestualità.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<!-- D9/D7 · font self-hosted (niente CDN bloccante; GFS Didot per il greco politonico) -->
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
 <link rel="stylesheet" href="assets/design.css">
-<script>try{var t=localStorage.getItem('analisitesto.theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script>(function(){try{var s=localStorage.getItem('analisitesto.theme');var t=(s==='dark'||s==='light')?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 </head>
 <body>
+<a class="skip-link" href="#view-archive">Salta al contenuto</a>
 
 <!-- ── TOP BAR ─────────────────────────────────────────────── -->
 <header class="topbar">
@@ -26,7 +26,7 @@
 </header>
 
 <!-- ── VISTA ARCHIVIO ──────────────────────────────────────── -->
-<section id="view-archive">
+<section id="view-archive" tabindex="-1">
   <div class="archive">
     <div class="archive-head">
       <h1>L'officina del testo</h1>
