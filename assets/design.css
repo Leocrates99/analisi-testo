@@ -4,6 +4,31 @@
    carta avorio, serif Playfair/Source Serif, sans Source Sans).
    ============================================================ */
 
+/* ── D7-bis · TIMES NEW ROMAN PER I SOLI CARATTERI GRECI ─────────────────────
+   Font virtuale ristretto per unicode-range: i codepoint greci risolvono su
+   Times New Roman, TUTTI gli altri ricadono sul font successivo dello stack.
+   Sostituzione per CARATTERE, non per elemento → regge le stringhe MISTE, che
+   qui sono la norma (commento filologico italiano con greco inline, lemma +
+   glossa, citazioni dentro una nota). Anteposto a ogni --font-*.
+   Varianti italic/bold dichiarate a parte, altrimenti il browser sintetizza.
+   Degrado sicuro: se Times non c'è, lo stack prosegue su GFS Didot (self-hosted).
+   Allineato a Poetrify (shared/poetrify-tokens.css) — armonizzazione totale. */
+@font-face{
+  font-family:'GreekTimes';
+  src:local('Times New Roman'), local('TimesNewRomanPSMT'), local('Times');
+  unicode-range:U+0370-03FF, U+1F00-1FFF, U+2126;
+}
+@font-face{
+  font-family:'GreekTimes'; font-style:italic;
+  src:local('Times New Roman Italic'), local('TimesNewRomanPS-ItalicMT'), local('Times New Roman');
+  unicode-range:U+0370-03FF, U+1F00-1FFF, U+2126;
+}
+@font-face{
+  font-family:'GreekTimes'; font-weight:600 700;
+  src:local('Times New Roman Bold'), local('TimesNewRomanPS-BoldMT'), local('Times New Roman');
+  unicode-range:U+0370-03FF, U+1F00-1FFF, U+2126;
+}
+
 :root {
   /* ── Brand & superfici ──────────────────────────────────── */
   --brand:        #1800AC;
@@ -29,9 +54,10 @@
   --imp-accessoria:  #8a857d;
 
   /* ── Tipografia ─────────────────────────────────────────── */
-  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --font-body:    'Source Serif 4', Georgia, serif;
-  --font-ui:      'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  /* 'GreekTimes' in testa a OGNI stack: intercetta i soli codepoint greci (D7-bis) */
+  --font-display: 'GreekTimes', 'Playfair Display', Georgia, serif;
+  --font-body:    'GreekTimes', 'Source Serif 4', Georgia, serif;
+  --font-ui:      'GreekTimes', 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   --font-mono:    'JetBrains Mono', Consolas, monospace;
 
   /* ── Testo su fondo pieno (Protocollo §8 · D3) ──────────────
@@ -49,7 +75,7 @@
      Il commento filologico prevede la variante «greco e latino»: serve una
      faccia con copertura U+1F00–1FFF verificata. MAI 'Source Serif 4' da sola
      (copre il monotonico, non spiriti/accenti/iota sottoscritto). */
-  --font-classical: 'GFS Didot', 'EB Garamond', 'Palatino Linotype', serif;
+  --font-classical: 'GreekTimes', 'GFS Didot', 'EB Garamond', 'Palatino Linotype', serif;
 
   /* ── Raggi, ombre, transizioni ──────────────────────────── */
   --radius-sm: 4px;
