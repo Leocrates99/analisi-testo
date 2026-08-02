@@ -159,6 +159,17 @@ a:hover { text-decoration: underline; }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .topbar .crumb b { color: var(--ink); font-weight: 600; }
+/* Via di ritorno al Corpus · sta nella briciola perché è lì che si dice DA DOVE
+   viene il passo, e non deve gridare: si dichiara al passaggio e al focus, come
+   il riferimento del tavolo dei passi in Poetrify. */
+.topbar .crumb .crumb-fonte {
+  color: inherit; text-decoration: underline; text-decoration-color: transparent;
+  text-underline-offset: 3px; transition: color .13s, text-decoration-color .13s;
+}
+.topbar .crumb .crumb-fonte:hover,
+.topbar .crumb .crumb-fonte:focus-visible {
+  color: var(--accent, var(--primary)); text-decoration-color: currentColor;
+}
 .topbar .actions { display: flex; gap: 8px; align-items: center; }
 .save-dot {
   font-family: var(--font-ui); font-size: 11px; color: var(--semantica);

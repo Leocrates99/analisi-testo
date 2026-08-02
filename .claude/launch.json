@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "analisi-testo",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-c", "from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler; ThreadingHTTPServer(('127.0.0.1',8171), SimpleHTTPRequestHandler).serve_forever()"],
+      "port": 8171,
+      "autoPort": false
+    }
+  ]
+}

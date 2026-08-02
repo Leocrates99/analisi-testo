@@ -207,7 +207,20 @@
     const p = currentPasso();
     if (!p) { go(false); return; }
     // crumb
-    $('#crumb').innerHTML = `<b>${esc(p.autore || '—')}</b>${p.opera ? ' · ' + esc(p.opera) : ''}${p.titolo ? ' · ' + esc(p.titolo) : ''}`;
+    /* La briciola porta anche la VIA DI RITORNO, quando il passo viene dal
+       Corpus. Il Corpus sta in un altro repo: su Pages è di fianco a questo, ma
+       l'indirizzo lo fa il nome del REPO — «Poetrify-Translatio» — non quello
+       della cartella locale, che si chiama diversamente. Portando il locus, di
+       là si atterra nel componimento o nel capitolo che contiene il passo, non
+       sul libro intero. */
+    let ritorno = '';
+    if (p.fonte && p.fonte.opera) {
+      const q = new URLSearchParams({ opera: p.fonte.opera });
+      if (p.fonte.loc) q.set('loc', p.fonte.loc);
+      ritorno = ` · <a class="crumb-fonte" href="../Poetrify-Translatio/corpus.html?${esc(q.toString())}"`
+        + ` target="_blank" rel="noopener" title="Rileggi questo passo nel Corpus">↩ nel Corpus</a>`;
+    }
+    $('#crumb').innerHTML = `<b>${esc(p.autore || '—')}</b>${p.opera ? ' · ' + esc(p.opera) : ''}${p.titolo ? ' · ' + esc(p.titolo) : ''}${ritorno}`;
     // meta header
     $('#wmAuthor').textContent = p.autore || '—';
     $('#wmTitle').textContent = p.titolo || 'Senza titolo';
@@ -978,9 +991,51 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
   }
 
+  /* ============================================================
+     CUCITURA DAL CORPUS DI POETRIFY
+     ------------------------------------------------------------
+     Il Corpus manda un passo con `?testo=…&autore=…&fonteOpera=…&fonteLoc=…`.
+     I primi campi riempiono la scheda; gli ultimi due sono la PROVENIENZA, ed
+     è quella che permette di tornare al testo — un passo staccato da dove
+     stava è proprio ciò che uno strumento d'analisi non deve produrre.
+
+     Arriva dall'URL e non da localStorage perché i due strumenti sono repo
+     distinti: su Pages stanno sulla stessa origine e si vedrebbero, ma in
+     locale girano su server diversi e non si vedrebbero affatto. Un passo
+     solo, per giunta, nell'URL ci sta comodo.
+
+     Il passo si crea UNA VOLTA: l'indirizzo si ripulisce subito dopo, così
+     ricaricare la pagina non ne deposita un duplicato ogni volta. */
+  function importaDalCorpus() {
+    const q = new URLSearchParams(location.search);
+    const testo = (q.get('testo') || '').trim();
+    if (!testo) return false;
+    const t = now();
+    const p = {
+      id: uid(),
+      autore: (q.get('autore') || '').trim(),
+      opera: (q.get('opera') || '').trim(),
+      titolo: (q.get('titolo') || '').trim() || 'Passo dal Corpus',
+      genere: q.get('genere') === 'prosa' ? 'prosa' : 'poesia',
+      lingua: q.get('lingua') === 'grc' ? 'grc' : 'la',
+      mode: 'con',
+      testo: testo,
+      annotazioni: [],
+      fonte: { opera: (q.get('fonteOpera') || '').trim(), loc: (q.get('fonteLoc') || '').trim() },
+      creato: t, modificato: t,
+    };
+    DB.passi.push(p); DB.currentId = p.id; save();
+    try { history.replaceState({}, '', location.pathname + '?passo=' + encodeURIComponent(p.id)); } catch (e) {}
+    toast('Passo importato dal Corpus');
+    return true;
+  }
+
   /* ── Avvio ────────────────────────────────────────────────── */
   load(); bind(); setDirty(false);
-  const _pid = new URLSearchParams(location.search).get('passo');
-  if (_pid && DB.passi.some((x) => x.id === _pid)) { DB.currentId = _pid; go(true); } else go(false);
+  if (importaDalCorpus()) { go(true); }
+  else {
+    const _pid = new URLSearchParams(location.search).get('passo');
+    if (_pid && DB.passi.some((x) => x.id === _pid)) { DB.currentId = _pid; go(true); } else go(false);
+  }
 
 })();
